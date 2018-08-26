@@ -1,0 +1,7 @@
+---
+- include: add_swap.yaml
+- include: set_timezone.yaml
+- include: enable_ufw.yaml
+- include: install_supervisor.yaml
+- include: install_mailhog.yaml
+- include: install_packages.yaml

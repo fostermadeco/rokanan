@@ -1,0 +1,61 @@
+---
+- set_fact:
+    php_version: 7.0
+  when: php_version is not defined
+  tags:
+      - php_modules
+
+- name: add php repo
+  become: yes
+  apt_repository:
+    repo: 'ppa:ondrej/php'
+    state: present
+    update_cache: yes
+  when: php_version != 7.0
+  tags:
+      - php_modules
+
+- name: install php
+  become: yes
+  apt:
+      name: "php{{ php_version if php_version != 7.0 else '' }}-{{ item }}"
+      state: present
+  with_items: "{{ ['fpm', 'cli', 'mysql', 'xdebug', 'zip'] + php_modules | default([]) }}"
+  tags:
+      - php_modules
+
+- name: ensure php-fpm is started
+  become: yes
+  service:
+      name: "php{{ php_version }}-fpm"
+      state: started
+      enabled: yes
+
+- name: change php-fpm to listen on socket
+  become: yes
+  ini_file:
+      dest: "/etc/php/{{ php_version }}/fpm/pool.d/www.conf"
+      section: www
+      option: listen
+      value: 127.0.0.1:9000
+
+- name: set default timezone
+  become: yes
+  ini_file:
+      dest: "/etc/php/{{ php_version }}/fpm/php.ini"
+      section: Date
+      option: date.timezone
+      value: 'America/New_York'
+  notify:
+      - restart php
+
+- name: override php settings
+  become: yes
+  with_items: "{{ php_config | default([]) }}"
+  ini_file:
+      dest: "/etc/php/{{ php_version }}/fpm/php.ini"
+      option: "{{ item.option }}"
+      section: "{{ item.section | default('PHP') }}"
+      value: "{{ item.value }}"
+  notify:
+      - restart php

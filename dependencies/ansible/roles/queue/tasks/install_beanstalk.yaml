@@ -1,0 +1,17 @@
+---
+- name: install beanstalkd
+  become: yes
+  apt:
+      name: beanstalkd
+      state: present
+  tags:
+      - beanstalk
+
+- name: ensure beanstalk is started
+  become: yes
+  service:
+      name: beanstalkd
+      state: started
+      enabled: yes
+  tags:
+      - beanstalk

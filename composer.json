@@ -1,0 +1,25 @@
+{
+    "name": "fostermadeco/rokanan",
+    "license": "MIT",
+    "type": "package",
+    "autoload": {
+        "psr-4": {
+            "FosterMade\\Rokanan\\": "src/"
+        }
+    },
+    "require": {
+        "php": ">=5.6",
+        "symfony/console": "^3.4",
+        "symfony/process": "^3.4",
+        "symfony/debug": "^3.4",
+        "symfony/filesystem": "^3.4",
+        "symfony/finder": "^3.4",
+        "symfony/yaml": "^3.4"
+    },
+    "bin": [
+        "bin/rokanan"
+    ],
+    "require-dev": {
+        "symfony/var-dumper": "^3.4"
+    }
+}

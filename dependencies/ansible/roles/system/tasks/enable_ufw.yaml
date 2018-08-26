@@ -1,0 +1,6 @@
+---
+- name: ensure ufw is enabled with a default policy of allow
+  become: yes
+  ufw:
+      state: enabled
+      policy: allow

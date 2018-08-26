@@ -1,0 +1,19 @@
+---
+version: 2.7.0
+operator: '>'
+description: There are currently no VirtualBox version requirements
+check: |
+  # Python version may go to stderr depending on the version ¯\_(ツ)_/¯
+  python -V 2>&1 | cut -d' ' -f2
+install: |
+  HOMEBREW_NO_AUTO_UPDATE=1 brew install virtualbox
+
+additional_tests:
+  - description: Checking if python is managed by homebrew
+    command: |
+      which python | grep /usr/local/bin/python
+    message: 'It appears you are using the system-installed Python. Do you want to install it with homebrew instead?'
+    correction: |
+      HOMEBREW_NO_AUTO_UPDATE=1 brew install python@2
+    decline: 'It is up to you to maintain python compatibility and ensure `pip` is available'
+    success: 'Python was successfully installed with homebrew'

@@ -1,0 +1,31 @@
+---
+-
+  hosts: all
+
+  roles:
+    - system
+    - lamp
+    - node
+
+  tasks:
+    - name: run handlers
+      meta: flush_handlers
+
+    - name: set git config values
+      template:
+        src: files/gitconfig.j2
+        dest: /home/vagrant/.gitconfig
+
+    - name: copy profile files
+      copy:
+        src: '{{ item }}'
+        dest: /home/vagrant
+        force: no
+      with_fileglob:
+        - files/dot/.*
+
+    - name: change into project directory on login
+      lineinfile:
+        path: ~/.bashrc
+        line: cd /var/www/{{ hostname }}
+        state: present

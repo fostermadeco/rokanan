@@ -1,0 +1,12 @@
+---
+version: 0
+operator: '>'
+description: There are currently no Homebrew version requirements
+check: |
+    HOMEBREW_NO_AUTO_UPDATE=1 brew --version | head -n1 | cut -d' ' -f2
+install: |
+    (xcode-select -p > /dev/null || xcode-select --install) && \
+    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" && \
+    HOMEBREW_NO_AUTO_UPDATE=1 brew install coreutils && \
+    HOMEBREW_NO_AUTO_UPDATE=1 brew install gnu-sed
+

@@ -1,0 +1,37 @@
+---
+- name: download minio
+  become: yes
+  get_url:
+      url: https://dl.minio.io/server/minio/release/linux-amd64/minio
+      dest: /usr/local/bin/minio
+      mode: 0755
+  creates: /usr/local/bin/minio
+  tags:
+      - minio
+
+- name: create supervisor minio program
+  become: yes
+  template:
+      src: ../templates/program_minio.conf.j2
+      dest: /etc/supervisor/conf.d/program_minio.conf
+  tags:
+      - minio
+
+- name: ensure minio is included in supervisorctl
+  become: yes
+  supervisorctl:
+      name: minio
+      state: present
+  tags:
+      - minio
+
+- name: create virtual host
+  include_role:
+    name: lamp
+    tasks_from: create_vhost
+  vars:
+    server_name: "minio.{{ hostname }}"
+    port: 9001
+    type: reverse_proxy
+  tags:
+    - vhost

@@ -1,0 +1,8 @@
+---
+version: 0
+operator: '>'
+description: There are currently no VirtualBox version requirements
+check: |
+    vboxmanage --version | cut -dr -f1
+install: |
+    HOMEBREW_NO_AUTO_UPDATE=1 brew install virtualbox

@@ -1,0 +1,14 @@
+[Unit]
+Description=Local installation of DynamoDB
+After=network.target
+Documentation=http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBLocal.html
+
+[Service]
+Type=simple
+User=root
+Group=staff
+
+ExecStart=/usr/bin/java -Djava.library.path=/usr/local/lib/dynamodb -jar /usr/local/lib/dynamodb/DynamoDBLocal.jar -sharedDb
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,10 @@
+<VirtualHost *:80>
+  ServerName {{ server_name }}
+
+  {% if (aliases is defined) and aliases %}
+    ServerAlias {{ aliases|join(' ') }}
+  {% endif %}
+
+  RewriteEngine On
+  RewriteRule (.+) https://%{HTTP_HOST}$1 [R=301]
+</VirtualHost>

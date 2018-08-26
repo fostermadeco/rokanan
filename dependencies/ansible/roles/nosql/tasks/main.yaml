@@ -1,0 +1,3 @@
+---
+- include: install_redis.yaml
+- include: install_mongodb.yaml

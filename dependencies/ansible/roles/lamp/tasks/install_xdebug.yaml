@@ -1,0 +1,16 @@
+---
+- set_fact:
+    xdebug_port: 9000
+  when: xdebug_port is not defined
+
+- name: setup xdebug config
+  become: yes
+  template:
+      src: 20-xdebug.ini
+      dest: /etc/php/{{ php_version }}/fpm/conf.d/20-xdebug.ini
+  notify:
+      - restart apache
+      - restart php
+  when: disable_xdebug is not defined or disable_xdebug != true
+  tags:
+      - xdebug

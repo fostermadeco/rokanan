@@ -1,0 +1,7 @@
+---
+# Dependencies are listed here in the order they should be processed
+- homebrew
+- virtualbox
+- vagrant
+- python
+- ansible

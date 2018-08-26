@@ -1,0 +1,8 @@
+---
+- include: create_certificate.yaml
+- include: install_apache.yaml
+- include: install_mysql.yaml
+- include: install_php.yaml
+- include: install_phpunit.yaml
+- include: install_xdebug.yaml
+- include: install_composer.yaml

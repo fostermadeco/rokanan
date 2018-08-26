@@ -1,0 +1,24 @@
+---
+# Tasks that require a vhost may run before Apache is installed
+- name: create sites directories if they do not exist
+  become: yes
+  file:
+    path: /etc/apache2/sites-{{ item }}/
+    state: directory
+  with_items:
+    - available
+    - enabled
+
+- name: create redirect virtual host file
+  become: yes
+  template:
+    src: redirect_vhost.conf.j2
+    dest: /etc/apache2/sites-available/{{ server_name }}_redirect.conf
+
+- name: create virtual host file
+  become: yes
+  template:
+    src: "{{ 'reverse_proxy_' if type is defined and type == 'reverse_proxy' else '' }}vhost.conf.j2"
+    dest: /etc/apache2/sites-available/{{ server_name }}.conf
+  notify:
+    - restart apache

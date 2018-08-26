@@ -1,0 +1,39 @@
+---
+# note that this automatically installs npm in addition to node
+# https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions
+
+- stat:
+      path: /usr/bin/node
+  register: node
+  tags:
+      - node
+      - npm
+
+- block:
+      - name: set node version when undefined
+        set_fact:
+            node_version: 9
+        when: node_version is not defined
+
+      - name: download node setup script
+        get_url:
+            url: https://deb.nodesource.com/setup_{{ node_version }}.x
+            dest: /tmp/node_setup
+
+      - name: add node source
+        shell: bash /tmp/node_setup
+
+      - name: remove node_setup
+        file:
+            path: /tmp/node_setup
+            state: absent
+
+      - name: install node and npm
+        apt:
+            name: nodejs
+            state: present
+  become: yes
+  when: node.stat.exists == false
+  tags:
+      - node
+      - npm

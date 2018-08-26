@@ -1,0 +1,5 @@
+---
+- name: Set timezone to 'America/New_York'
+  become: yes
+  when: ansible_date_time.tz != 'EST' and ansible_date_time.tz != 'EDT'
+  command: timedatectl set-timezone 'America/New_York'

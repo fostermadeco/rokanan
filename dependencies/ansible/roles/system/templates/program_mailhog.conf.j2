@@ -1,0 +1,9 @@
+[program:mailhog]
+command=/usr/local/bin/mailhog [ -smtp-bind-addr 0.0.0.0:1025,  -ui-bind-addr 0.0.0.0:8025]
+priority=100
+autostart=true
+autorestart=true
+user=vagrant
+stdout_logfile=/var/log/supervisor/program_mailhog.log
+stderr_logfile=/var/log/supervisor/program_mailhog.error
+environment=PATH='/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin/mailhog'

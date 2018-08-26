@@ -1,0 +1,9 @@
+[program:minio]
+command=/usr/local/bin/minio server --address 127.0.0.1:9001 /mnt/data
+priority=100
+autostart=true
+autorestart=true
+user=root
+stdout_logfile=/var/log/supervisor/program_minio.log
+stderr_logfile=/var/log/supervisor/program_minio.error
+environment=MINIO_DOMAIN="minio.{{ hostname }}",PATH="/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin/minio",MINIO_ACCESS_KEY={{ aws_access_key|default('access') }},MINIO_SECRET_KEY={{ aws_secret_key|default('secretkey') }}

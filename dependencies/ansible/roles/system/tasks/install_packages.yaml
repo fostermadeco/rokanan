@@ -1,0 +1,14 @@
+---
+- name: update system
+  become: yes
+  apt:
+      update_cache: yes
+
+- name: install packages
+  become: yes
+  apt:
+      name: "{{ item }}"
+      state: present
+  with_items: "{{ packages | default([]) }}"
+  tags:
+      - packages

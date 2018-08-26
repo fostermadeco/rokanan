@@ -1,0 +1,34 @@
+---
+- stat:
+      path: /usr/local/bin/composer
+  register: composer
+  tags:
+      - composer
+
+- block:
+      - name: get composer installer hash
+        uri:
+            url: https://composer.github.io/installer.sig
+            return_content: yes
+        register: installer_sig
+
+      - name: download composer installer
+        get_url:
+            url: https://getcomposer.org/installer
+            checksum: sha384:{{ installer_sig.content }}
+            dest: /tmp/composer-setup.php
+            mode: 0755
+
+      - name: install composer
+        command: php composer-setup.php --filename=composer --install-dir=/usr/local/bin
+        args:
+            chdir: /tmp
+
+      - name: remove downloaded composer file
+        file:
+            path: /tmp/composer-setup.php
+            state: absent
+  become: yes
+  when: composer.stat.exists == false
+  tags:
+      - composer

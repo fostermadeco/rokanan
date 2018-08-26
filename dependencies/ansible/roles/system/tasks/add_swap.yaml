@@ -1,0 +1,32 @@
+---
+- name: create the file to be used for swap
+  become: yes
+  command: fallocate -l 8G /mnt/8GB.swap
+  when: ansible_swaptotal_mb < 8000
+
+- name: format the file for swap
+  become: yes
+  command: mkswap /mnt/8GB.swap
+  when: ansible_swaptotal_mb < 8000
+
+- name: change swap file permissions
+  become: yes
+  file:
+      path: /mnt/8GB.swap
+      mode: 0600
+
+- name: add the file to the system as a swap file
+  become: yes
+  command: swapon /mnt/8GB.swap
+  when: ansible_swaptotal_mb < 8000
+
+- name: write swap entry in fstab
+  become: yes
+  mount:
+      name: none
+      src: /mnt/8GB.swap
+      fstype: swap
+      opts: sw
+      passno: 0
+      dump: 0
+      state: present

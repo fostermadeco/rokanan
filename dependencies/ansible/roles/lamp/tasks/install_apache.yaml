@@ -1,0 +1,71 @@
+---
+- name: install apache2
+  become: yes
+  apt:
+      name: apache2
+      state: present
+
+- name: ensure apache2 is started
+  service:
+      name: apache2
+      state: started
+      enabled: yes
+
+- name: enable mods
+  become: yes
+  apache2_module:
+      name: "{{ item }}"
+      state: present
+  with_items:
+      - proxy
+      - proxy_fcgi
+      - rewrite
+      - ssl
+      - proxy_http
+
+- name: disable default sites
+  become: yes
+  file:
+      path: /etc/apache2/sites-{{ item[0] }}/{{ item[1] }}.conf
+      state: absent
+  with_nested:
+    - ['enabled', 'available']
+    - ['000-default', 'default-ssl']
+
+- name: create vhost
+  include_role:
+    name: lamp
+    tasks_from: create_vhost.yaml
+  vars:
+      server_name: "{{ hostname }}"
+      aliases: "{{ server_aliases|default([]) }}"
+      root: "{{ document_root }}"
+  tags:
+      - vhost
+
+- name: stat sites-enabled to determine if it is already a link
+  stat:
+      path: /etc/apache2/sites-enabled
+  register: sites
+  tags:
+    - vhost
+
+- name: make sure sites-enabled does not exist
+  become: yes
+  file:
+      path: /etc/apache2/sites-enabled
+      state: absent
+  when: sites.stat.exists and (not sites.stat.islnk or sites.stat.lnk_source != "/etc/apache2/sites-available")
+  tags:
+    - vhost
+
+- name: enable sites
+  become: yes
+  file:
+      src: /etc/apache2/sites-available
+      dest: /etc/apache2/sites-enabled
+      state: link
+  notify:
+      - restart apache
+  tags:
+    - vhost
