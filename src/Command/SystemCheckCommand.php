@@ -5,7 +5,6 @@ namespace FosterMade\Rokanan\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
-use Symfony\Component\Process\Process;
 use Symfony\Component\Yaml\Yaml;
 
 class SystemCheckCommand extends Command
@@ -46,47 +45,43 @@ EOS
         $helper = $this->getHelper('question');
 
         foreach ($dependencies as $dependency) {
-            $output->write("<comment>• Checking that {$dependency} is installed</comment> ");
+            $this->output->write("<comment>• Checking that {$dependency} is installed</comment> ");
 
             $version = Yaml::parseFile("{$this->root}/dependencies/{$dependency}/version.yaml");
 
-            $process = new Process($version['check']);
-            $process->run();
+            $process = $this->createProcess($version['check'], false, false);
+            $this->runProcess($process, false);
 
             if ($process->getExitCode() === 0) {
-                $output->write("<info>✔</info>", true);
+                $this->output->write("<info>✔</info>", true);
 
                 if ($version['version'] !== 0) {
                     $installed = trim($process->getOutput());
 
-                    $output->writeln(str_repeat(' ', 2)."<comment>• Checking that the installed {$dependency} version is compatible</comment>");
-                    $output->write(str_repeat(' ', 4) . "<info>{$installed} {$version['operator']} {$version['version']}</info> ");
+                    $this->output->writeln(str_repeat(' ', 2)."<comment>• Checking that the installed {$dependency} version is compatible</comment>");
+                    $this->output->write(str_repeat(' ', 4) . "<info>{$installed} {$version['operator']} {$version['version']}</info> ");
 
                     if (true === version_compare($installed, $version['version'], $version['operator'])) {
-                        $output->write("<info>✔</info>", true);
+                        $this->output->write("<info>✔</info>", true);
                     }
                 }
             } else {
 
-                $output->write("<info>✘</info>", true);
+                $this->output->write("<info>✘</info>", true);
 
                 $question = new Question("{$dependency} could not be found. Do you want to try to install it? (y/N)", "N");
-                $install = $helper->ask($input, $output, $question);
+                $install = $helper->ask($this->input, $this->output, $question);
 
                 if (strtolower($install) === 'y') {
-                    $process = new Process($version['install']);
-                    $process->setPty(true);
-                    $process->setTty(true);
-                    $process->run(function ($type, $buffer) use ($output) {
-                        $output->write($buffer, true);
-                    });
+                    $process = $this->createProcess($version['install'], true, true);
+                    $this->runProcess($process);
 
                     if ($process->isSuccessful()) {
-                        $output->writeln("<comment>{$dependency} was successfully installed.</comment>");
+                        $this->output->writeln("<comment>{$dependency} was successfully installed.</comment>");
                         continue;
                     }
 
-                    $output->writeln("<error>{$dependency} could not be installed.</error>");
+                    $this->output->writeln("<error>{$dependency} could not be installed.</error>");
                     exit(1);
                 }
             }
@@ -94,12 +89,12 @@ EOS
             $tests = isset($version['additional_tests']) ? $version['additional_tests'] : [];
 
             foreach ($tests as $test) {
-                $output->write(str_repeat(' ', 2)."<comment>• {$test['description']}</comment> ");
-                $process = new Process($test['command']);
-                $process->run();
+                $this->output->write(str_repeat(' ', 2)."<comment>• {$test['description']}</comment> ");
+                $process = $this->createProcess($test['command'], false, false);
+                $this->runProcess($process, false);
 
                 if ($process->isSuccessful()) {
-                    $output->write("<info>✔</info>", true);
+                    $this->output->write("<info>✔</info>", true);
                     continue;
                 }
 
@@ -107,23 +102,19 @@ EOS
 
                 if (!$test['required']) {
                     $question = new Question(str_repeat(' ', 4) . '<comment>' . $test['message'] . " (y/N)</comment> ", "N");
-                    $fix = $helper->ask($input, $output, $question);
+                    $fix = $helper->ask($this->input, $this->output, $question);
                 }
 
                 if (strtolower($fix) === 'y') {
-                    $process = new Process($test['correction']);
-                    $process->setPty(true);
-                    $process->setTty(true);
-                    $process->run(function ($type, $buffer) use ($output) {
-                        $output->write($buffer, true);
-                    });
+                    $process = $this->createProcess($test['correction']);
+                    $this->runProcess($process);
 
                     if ($process->isSuccessful()) {
-                        $output->writeln(str_repeat(' ', 4)."<comment>{$test['success']}</comment>");
+                        $this->output->writeln(str_repeat(' ', 4)."<comment>{$test['success']}</comment>");
                         continue;
                     }
                 } else {
-                    $output->writeln(str_repeat(' ', 4) . "<comment>{$test['decline']}</comment>");
+                    $this->output->writeln(str_repeat(' ', 4) . "<comment>{$test['decline']}</comment>");
                 }
             }
         }
