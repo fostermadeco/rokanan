@@ -1,16 +1,9 @@
 # -*- mode: ruby -*-
 
-if ['up', 'provision', 'reload'].include?(ARGV[0])
-  unless system('ansible-playbook ansible/system_check/main.yml -i localhost,')
-    raise 'System check failed'
-  end
-end
-
 require 'yaml'
 
 dir = File.dirname(File.expand_path(__FILE__))
-vars = YAML.load_file("#{dir}/ansible/group_vars/all")
-version = YAML.load_file(File.exist?("#{dir}/ansible/version") ? "#{dir}/ansible/version" : "#{dir}/ansible/roles/version")
+vars = YAML.load_file("#{dir}/ansible/host_vars/default")
 
 Vagrant.configure("2") do |config|
 
@@ -42,7 +35,7 @@ Vagrant.configure("2") do |config|
      end
   end
 
-  config.vm.box = version
+  config.vm.box = vars["box"]
   config.disksize.size = '64GB'
 
   config.vm.hostname = vars["hostname"]
@@ -67,7 +60,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.provision "ansible" do |ansible|
     ansible.verbose = "v"
-    ansible.playbook = "ansible/provision.yml"
+    ansible.playbook = "ansible/provision_dev.yaml"
   end
 
 end

@@ -1,0 +1,4 @@
+---
+defaults:
+  roles_path: dependencies/ansible/roles
+  deprecation_warnings: "False"
