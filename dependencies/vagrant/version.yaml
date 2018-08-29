@@ -8,6 +8,20 @@ install: |
   HOMEBREW_NO_AUTO_UPDATE=1 brew cask install vagrant
 
 additional_tests:
+  - description: Checking VAGRANT_USE_VAGRANT_TRIGGERS environment variable
+    command: |
+      grep 'export VAGRANT_USE_VAGRANT_TRIGGERS=1' ~/.bash_profile
+    message: |
+      We must set VAGRANT_USE_VAGRANT_TRIGGERS=1 to use Vagrant 2.1.0+
+    correction: |
+      touch ~/.bash_profile && \
+      echo 'export VAGRANT_USE_VAGRANT_TRIGGERS=1' >> ~/.bash_profile
+    required: true
+    success: |
+      'export VAGRANT_USE_VAGRANT_TRIGGERS=1' was appended to ~/.bash_profile
+    action: |
+      run `. ~/.bash_profile` to set the variable now
+
   - description: Checking that the vagrant-hostsupdater plugin is installed
     command: |
       vagrant plugin list --machine-readable | awk -F, '/plugin-name/ && /vagrant-hostsupdater/ { print $NF }'
@@ -16,7 +30,8 @@ additional_tests:
     correction: |
       vagrant plugin install vagrant-hostsupdater
     required: true
-    success: 'The vagrant-hostsupdater plugin was successfully installed.'
+    success: >
+      The vagrant-hostsupdater plugin was successfully installed.
 
   - description: Checking that the vagrant-triggers plugin is installed
     command: |
@@ -26,7 +41,8 @@ additional_tests:
     correction: |
       vagrant plugin install vagrant-triggers
     required: true
-    success: 'The vagrant-triggers plugin was successfully installed'
+    success: >
+      The vagrant-triggers plugin was successfully installed
 
   - description: Checking that the vagrant-disksize plugin is installed
     command: |
@@ -36,4 +52,5 @@ additional_tests:
     correction: |
         vagrant plugin install vagrant-disksize
     required: true
-    success: 'The vagrant-disksize plugin was successfully installed.'
+    success: >
+      The vagrant-disksize plugin was successfully installed.

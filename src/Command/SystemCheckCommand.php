@@ -98,10 +98,14 @@ EOS
                     continue;
                 }
 
+                $this->output->write("<info>✘</info>", true);
+
                 $fix = ($test['required']) ? 'y' : 'n';
 
-                if (!$test['required']) {
-                    $question = new Question(str_repeat(' ', 4) . '<comment>' . $test['message'] . " (y/N)</comment> ", "N");
+                if ($test['required']) {
+                    $this->output->writeln(str_repeat(' ', 4)."<comment>{$test['message']}</comment>");
+                } else {
+                    $question = new Question(str_repeat(' ', 4).'<comment>' . $test['message'] . " (y/N)</comment> ", "N");
                     $fix = $helper->ask($this->input, $this->output, $question);
                 }
 
@@ -111,6 +115,11 @@ EOS
 
                     if ($process->isSuccessful()) {
                         $this->output->writeln(str_repeat(' ', 4)."<comment>{$test['success']}</comment>");
+
+                        if (isset($test['action'])) {
+                            $this->output->writeln(str_repeat(' ', 4)."<comment>{$test['action']}</comment>");
+                        }
+
                         continue;
                     }
                 } else {
