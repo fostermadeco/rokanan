@@ -1,9 +1,4 @@
 ---
-- name: detect trust_cert value
-  set_fact:
-    trust_cert: 1
-  when: trust_cert is not defined
-
 - name: detect certpath value
   set_fact:
     certpath: /usr/local/etc
@@ -82,4 +77,3 @@
     src: /etc/ssl/certs/{{ hostname }}.crt
     dest: '{{ certpath }}/ssl/certs/{{ hostname }}.crt'
     flat: yes
-  when: trust_cert != 0
