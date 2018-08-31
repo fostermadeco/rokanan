@@ -1,69 +1,72 @@
 ---
-- stat:
-      path: /usr/local/bin/tsql
+- name: stat tsql
+  stat:
+    path: /usr/local/bin/tsql
   register: sqlsrv
   tags:
-      - sqlsrv
+    - sqlsrv
 
 - block:
-      - name: get latest freetds hash
-        get_url:
-            url: ftp://ftp.freetds.org/pub/freetds/stable/freetds-patched.tar.gz.md5
-            dest: /tmp/freetds_hash
 
-      - name: register the freetds hash
-        shell: head -n1 /tmp/freetds_hash | cut -d= -f 2 | tr -d ' '
-        register: freetds_hash
+    - name: get latest freetds hash
+      get_url:
+        url: ftp://ftp.freetds.org/pub/freetds/stable/freetds-patched.tar.gz.md5
+        dest: /tmp/freetds_hash
 
-      - name: register freetds version
-        shell: head -n1 /tmp/freetds_hash | sed 's/.*(\(.*\)\.tar\.gz).*/\1/'
-        register: freetds_version
+    - name: register the freetds hash
+      shell: head -n1 /tmp/freetds_hash | cut -d= -f 2 | tr -d ' '
+      register: freetds_hash
 
-      - name: ensure required packages are installed
-        apt:
-            name: "{{ item }}"
-            state: present
-        with_items:
-            - build-essential
-            - libc6-dev
+    - name: register freetds version
+      shell: head -n1 /tmp/freetds_hash | sed 's/.*(\(.*\)\.tar\.gz).*/\1/'
+      register: freetds_version
 
-      - name: download the latest freetds version
-        get_url:
-            url: ftp://ftp.freetds.org/pub/freetds/stable/freetds-patched.tar.gz
-            checksum: md5:{{ freetds_hash.stdout }}
-            dest: /tmp/freetds-patched.tar.gz
+    - name: ensure required packages are installed
+      apt:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - build-essential
+        - libc6-dev
 
-      - name: unarchive the downloaded package
-        unarchive:
-            remote_src: yes
-            src: /tmp/freetds-patched.tar.gz
-            dest: /tmp
+    - name: download the latest freetds version
+      get_url:
+        url: ftp://ftp.freetds.org/pub/freetds/stable/freetds-patched.tar.gz
+        checksum: md5:{{ freetds_hash.stdout }}
+        dest: /tmp/freetds-patched.tar.gz
 
-      - name: install freetds
-        command: "{{ item }}"
-        args:
-            chdir: "/tmp/{{ freetds_version.stdout }}"
-        with_items:
-            - ./configure --prefix=/usr/local --with-tdsver=7.1
-            - make
-            - make install
+    - name: unarchive the downloaded package
+      unarchive:
+        remote_src: yes
+        src: /tmp/freetds-patched.tar.gz
+        dest: /tmp
 
-      - name: change tds version to 7.1
-        ini_file:
-            dest: /etc/freetds/freetds.conf
-            section: global
-            option: "\ttds version" # the freetds.conf uses leading tabs, which are not currently matched by the ini_file module
-            value: 7.1
+    - name: install freetds
+      command: "{{ item }}"
+      args:
+        chdir: "/tmp/{{ freetds_version.stdout }}"
+      with_items:
+        - ./configure --prefix=/usr/local --with-tdsver=7.1
+        - make
+        - make install
 
-      - name: remove downloaded files
-        file:
-              path: "/tmp/{{ item }}"
-              state: absent
-        with_items:
-            - freetds_hash
-            - freetds-patched.tar.gz
-            - "{{ freetds_version.stdout }}"
+    - name: change tds version to 7.1
+      ini_file:
+        dest: /etc/freetds/freetds.conf
+        section: global
+        option: "\ttds version" # the freetds.conf uses leading tabs, which are not currently matched by the ini_file module
+        value: 7.1
+
+    - name: remove downloaded files
+      file:
+          path: "/tmp/{{ item }}"
+          state: absent
+      with_items:
+        - freetds_hash
+        - freetds-patched.tar.gz
+        - "{{ freetds_version.stdout }}"
+
   become: yes
   when: sqlsrv.stat.exists == false
   tags:
-      - sqlsrv
+    - sqlsrv

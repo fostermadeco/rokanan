@@ -4,10 +4,11 @@
     mongodb_key_ids:
       3.4: 0C49F3730359A14518585931BC711F9BA15703C6
       3.6: 2930ADAE8CAF5059EE73BB4B58712A2291FA4AD5
+      4.0: 9DA31620334BD75D9DCB49F368818C72E52529D4
 
 - name: set mongodb version when undefined
   set_fact:
-    mongodb_version: 3.6
+    mongodb_version: 4.0
   when: mongodb_version is not defined
 
 - name: add mongo repo key
@@ -18,7 +19,7 @@
 
 - name: add stable mongodb
   become: yes
-  shell: 'echo "deb [ arch=amd64,arm64 ] http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/{{ mongodb_version}} multiverse" | tee /etc/apt/sources.list.d/mongodb-org-{{ mongodb_version}}.list'
+  shell: 'echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/{{ mongodb_version}} multiverse" | tee /etc/apt/sources.list.d/mongodb-org-{{ mongodb_version}}.list'
   args:
       creates: /etc/apt/sources.list.d/mongodb-org-{{ mongodb_version }}.list
   tags:

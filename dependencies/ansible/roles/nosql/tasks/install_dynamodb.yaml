@@ -1,21 +1,23 @@
 ---
-- stat:
-      path: /usr/local/bin/dynamodb
+- name: stat dynamodb
+  stat:
+    path: /usr/local/bin/dynamodb
   register: dynamodb
   tags:
-      - dynamodb
+    - dynamodb
 
 - block:
+
     - name: install java
       apt:
-          name: default-jre
-          state: present
-          update_cache: yes
+        name: default-jre
+        state: present
+        update_cache: yes
 
     - name: get latest dynamodb hash
       get_url:
-          url: https://s3-us-west-2.amazonaws.com/dynamodb-local/dynamodb_local_latest.tar.gz.sha256
-          dest: /tmp/dynamodb_checksum
+        url: https://s3-us-west-2.amazonaws.com/dynamodb-local/dynamodb_local_latest.tar.gz.sha256
+        dest: /tmp/dynamodb_checksum
 
     - name: register dynamodb checksum
       shell: cut -d' ' -f1 /tmp/dynamodb_checksum
@@ -23,43 +25,43 @@
 
     - name: remove downloaded hash file
       file:
-          path: /tmp/dynamodb_checksum
-          state: absent
+        path: /tmp/dynamodb_checksum
+        state: absent
 
     - name: download dynamodb archive
       get_url:
-          url: https://s3-us-west-2.amazonaws.com/dynamodb-local/dynamodb_local_latest.tar.gz
-          checksum: sha256:{{ dynamodb_checksum.stdout }}
-          dest: /tmp/dynamodb.tar.gz
-          mode: 0644
+        url: https://s3-us-west-2.amazonaws.com/dynamodb-local/dynamodb_local_latest.tar.gz
+        checksum: sha256:{{ dynamodb_checksum.stdout }}
+        dest: /tmp/dynamodb.tar.gz
+        mode: 0644
 
     - name: create dest directory
       file:
-          path: /usr/local/lib/dynamodb
-          state: directory
+        path: /usr/local/lib/dynamodb
+        state: directory
 
     - name: unarchive the downloaded package
       unarchive:
-          remote_src: yes
-          src: /tmp/dynamodb.tar.gz
-          dest: /usr/local/lib/dynamodb
+        remote_src: yes
+        src: /tmp/dynamodb.tar.gz
+        dest: /usr/local/lib/dynamodb
 
     - name: create dynamodb service
       template:
-          src: ../templates/dynamodb.service
-          dest: /lib/systemd/system/dynamodb.service
+        src: ../templates/dynamodb.service.j2
+        dest: /lib/systemd/system/dynamodb.service
 
   become: yes
   when: dynamodb.stat.exists == false
   tags:
-      - dynamodb
+    - dynamodb
 
 - name: ensure dynamodb is started
   become: yes
   systemd:
-      daemon_reload: yes
-      name: dynamodb
-      state: started
-      enabled: yes
+    daemon_reload: yes
+    name: dynamodb
+    state: started
+    enabled: yes
   tags:
-      - dynamodb
+    - dynamodb

@@ -2,73 +2,73 @@
 - name: ensure mysql is installed
   become: yes
   apt:
-      name: "{{ item }}"
-      state: present
+    name: "{{ item }}"
+    state: present
   with_items:
-      - mysql-server
-      - mysql-client
-      - python-mysqldb
+    - mysql-server
+    - libmysqlclient-dev
+    - python3-mysqldb
 
 - name: ensure mysql is started
   service:
-      name: mysql
-      state: started
-      enabled: yes
+    name: mysql
+    state: started
+    enabled: yes
 
 - name: set root user password
   become: yes
   mysql_user:
-      name: root
-      password: root
-      check_implicit_admin: true
+    name: root
+    password: root
+    check_implicit_admin: true
 
 - name: create root .my.cnf
   become: yes
   template:
-      src: my.cnf.j2
-      dest: "/root/.my.cnf"
-      mode: 0600
+    src: my.cnf.j2
+    dest: "/root/.my.cnf"
+    mode: 0600
   vars:
-      - user: root
-      - password: root
+    - user: root
+    - password: root
 
 - name: remove anonymous user
   become: yes
   mysql_user:
-      name: ''
-      host: localhost
-      state: absent
+    name: ''
+    host: localhost
+    state: absent
 
 - name: create vagrant user
   become: yes
   mysql_user:
-      name: vagrant
-      password: vagrant
-      priv: "*.*:ALL"
-      state: present
+    name: vagrant
+    password: vagrant
+    priv: "*.*:ALL"
+    state: present
 
 - name: create vagrant .my.cnf
   template:
-      src: my.cnf.j2
-      dest: "/home/vagrant/.my.cnf"
-      mode: 0600
+    src: my.cnf.j2
+    dest: "/home/vagrant/.my.cnf"
+    mode: 0600
   vars:
-      user: vagrant
-      password: vagrant
+    user: vagrant
+    password: vagrant
 
 - name: create databases
   mysql_db:
-      name: "{{ item }}"
-      state: present
+    name: "{{ item }}"
+    state: present
   with_items: "{{ mysql_databases|default([]) }}"
 
 - name: override mysql settings
   become: yes
   with_items: "{{ mysql_config | default([]) }}"
   ini_file:
-      dest: "/etc/mysql/my.cnf"
-      option: "{{ item.option }}"
-      section: "{{ item.section | default('mysqld') }}"
-      value: "{{ item.value }}"
+    dest: "/etc/mysql/my.cnf"
+    option: "{{ item.option }}"
+    section: "{{ item.section | default('mysqld') }}"
+    value: "{{ item.value }}"
   notify:
-      - restart mysql
+    - restart mysql

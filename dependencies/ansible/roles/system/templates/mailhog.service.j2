@@ -1,0 +1,14 @@
+[Unit]
+Description=Installation of Mailhog
+After=network.target
+Documentation=https://github.com/mailhog/MailHog
+
+[Service]
+Type=simple
+User=root
+Group=staff
+
+ExecStart=/usr/local/bin/mailhog [ -smtp-bind-addr 0.0.0.0:1025,  -ui-bind-addr 0.0.0.0:8025]
+
+[Install]
+WantedBy=multi-user.target

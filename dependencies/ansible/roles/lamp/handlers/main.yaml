@@ -14,5 +14,5 @@
 - name: restart php
   become: yes
   service:
-      name: php{{ php_version | default('7.0') }}-fpm
+      name: php{{ php_version | default('7.2') }}-fpm
       state: restarted

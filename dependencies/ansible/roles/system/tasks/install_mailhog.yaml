@@ -1,45 +1,48 @@
 ---
-- set_fact:
-      email_hostname: '{{ "email." ~ hostname }}'
+- name: detect email_hostname value
+  set_fact:
+    email_hostname: '{{ "email." ~ hostname }}'
   when: email_hostname is not defined
 
 - name: download mailhog
   become: yes
   get_url:
-      url: https://github.com/mailhog/MailHog/releases/download/v0.2.1/MailHog_linux_amd64
-      dest: /usr/local/bin/mailhog
-      mode: 0755
+    url: https://github.com/mailhog/MailHog/releases/download/v0.2.1/MailHog_linux_amd64
+    dest: /usr/local/bin/mailhog
+    mode: 0755
 
-- name: create supervisor mailhog program
+- name: create mailhog service
   become: yes
   template:
-      src: program_mailhog.conf.j2
-      dest: /etc/supervisor/conf.d/program_mailhog.conf
+    src: ../templates/mailhog.service.j2
+    dest: /lib/systemd/system/mailhog.service
 
-- name: ensure mailhog is included in supervisorctl
+- name: ensure mailhog is started
   become: yes
-  supervisorctl:
-      name: mailhog
-      state: present
+  systemd:
+    daemon_reload: yes
+    name: mailhog
+    state: started
+    enabled: yes
 
 - name: disable outbound 25 and 587 traffic (just in case)
   become: yes
   ufw:
-      rule: deny
-      proto: tcp
-      port: "{{ item }}"
+    rule: deny
+    proto: tcp
+    port: "{{ item }}"
   with_items:
-      - 25
-      - 587
+    - 25
+    - 587
 
 - name: ensure 25 and 587 are closed
   wait_for:
-      host: 127.0.0.1
-      port: "{{ item }}"
-      state: stopped
+    host: 127.0.0.1
+    port: "{{ item }}"
+    state: stopped
   with_items:
-      - 25
-      - 587
+    - 25
+    - 587
 
 - name: create virtual host
   include_role:

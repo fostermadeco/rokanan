@@ -1,13 +1,16 @@
 ---
-- set_fact:
+- name: detect trust_cert value
+  set_fact:
     trust_cert: 1
   when: trust_cert is not defined
 
-- set_fact:
+- name: detect certpath value
+  set_fact:
     certpath: /usr/local/etc
   when: certpath is not defined
 
-- set_fact:
+- name: detect email_hostname value
+  set_fact:
     email_hostname: '{{ "email." ~ hostname }}'
   when: email_hostname is not defined
 
@@ -15,50 +18,50 @@
 - name: add SAN to openssl conf file
   become: yes
   ini_file:
-      dest: /etc/ssl/openssl.cnf
-      section: '{{ item.section }}'
-      option: '{{ item.option }}'
-      value: '{{ item.value }}'
+    dest: /etc/ssl/openssl.cnf
+    section: '{{ item.section }}'
+    option: '{{ item.option }}'
+    value: '{{ item.value }}'
   with_items:
-      - section: alternate_names
-        option: DNS.1
-        value: '{{ hostname }}'
-      - section: alternate_names
-        option: DNS.2
-        value: '{{ email_hostname }}'
-      - section: v3_ca
-        option: subjectAltName
-        value: '@alternate_names'
-      - section: v3_ca
-        option: keyUsage
-        value: 'digitalSignature, keyEncipherment'
-      - section: CA_default
-        option: copy_extensions
-        value: copy
+    - section: alternate_names
+      option: DNS.1
+      value: '{{ hostname }}'
+    - section: alternate_names
+      option: DNS.2
+      value: '{{ email_hostname }}'
+    - section: v3_ca
+      option: subjectAltName
+      value: '@alternate_names'
+    - section: v3_ca
+      option: keyUsage
+      value: 'digitalSignature, keyEncipherment'
+    - section: CA_default
+      option: copy_extensions
+      value: copy
   tags:
-      - cert
+    - cert
 
 - name: add additional SAN to openssl conf file
   become: yes
   ini_file:
-      dest: /etc/ssl/openssl.cnf
-      section: alternate_names
-      option: DNS.{{ item.0 | int + 3 }}
-      value: '{{ item.1 }}'
+    dest: /etc/ssl/openssl.cnf
+    section: alternate_names
+    option: DNS.{{ item.0 | int + 3 }}
+    value: '{{ item.1 }}'
   with_indexed_items: '{{ server_aliases|default([]) + additional_vhosts|default([]) }}'
   tags:
-      - cert
+    - cert
 
 # h/t to https://serialized.net/2013/04/simply-generating-self-signed-ssl-certs-with-ansible/
 - name: create self-signed SSL cert
   become: yes
   command: openssl req -new -nodes -x509 -subj "/C=US/ST=Virginia/L=Richmond/O=Foster Made/CN=Local Dev - {{ hostname }}" -days 3650 -keyout /etc/ssl/private/{{ hostname }}.key -out /etc/ssl/certs/{{ hostname }}.crt -extensions v3_ca
   args:
-      creates: /etc/ssl/certs/{{ hostname }}.crt
+    creates: /etc/ssl/certs/{{ hostname }}.crt
   notify:
-        - restart apache
+      - restart apache
   tags:
-      - cert
+    - cert
 
 - name: Ensure ssl-cert group exists
   become: yes

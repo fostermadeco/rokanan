@@ -1,0 +1,15 @@
+[Unit]
+Description=Local installation of Minio
+After=network.target
+Documentation=https://docs.minio.io/
+
+[Service]
+Type=simple
+User=root
+Group=staff
+
+Environment='MINIO_DOMAIN="minio.{{ hostname }}",PATH="/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin/minio",MINIO_ACCESS_KEY={{ aws_access_key|default("access") }},MINIO_SECRET_KEY={{ aws_secret_key|default("secretkey") }}'
+ExecStart=/usr/local/bin/minio server --address 127.0.0.1:9001 /mnt/data
+
+[Install]
+WantedBy=multi-user.target

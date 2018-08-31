@@ -1,24 +1,17 @@
 ---
-- name: Add sphinx repository
-  become: yes
-  apt_repository:
-      repo: 'ppa:builds/sphinxsearch-rel22'
-  tags:
-      - sphinx
-
 - name: install sphinx
   become: yes
   apt:
-      name: sphinxsearch
-      state: present
+    name: sphinxsearch
+    state: present
   tags:
       - sphinx
 
 - name: ensure sphinx is stopped
   become: yes
   service:
-      name: sphinxsearch
-      state: stopped
-      enabled: no
+    name: sphinxsearch
+    state: stopped
+    enabled: no
   tags:
       - sphinx
