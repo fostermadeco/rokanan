@@ -71,6 +71,13 @@
     append: yes
     groups: ssl-cert
 
+- name: let ssl-cert group read self-signed cert
+  become: yes
+  file:
+    path: /etc/ssl/private/{{ hostname }}.key
+    mode: 0640
+    group: ssl-cert
+
 - name: copy cert to host system
   become: yes
   fetch:
