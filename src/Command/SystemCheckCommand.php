@@ -63,6 +63,8 @@ EOS
 
                     if (true === version_compare($installed, $version['version'], $version['operator'])) {
                         $this->output->write("<info>✔</info>", true);
+                    } else {
+                        $this->output->write("<info>✘</info>", true);
                     }
                 }
             } else {
