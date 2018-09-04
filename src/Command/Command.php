@@ -63,28 +63,18 @@ class Command extends BaseCommand
     }
 
     /**
-     * @param string $command
+     * @param string|array $command
      * @param bool $pty
      * @param bool $tty
+     * @param null $cwd
      * @return Process
      */
-    protected function createProcess($command, $pty = true, $tty = true)
+    protected function createProcess($command, $pty = true, $tty = true, $cwd = null)
     {
-        $process = new Process($command);
+        $process = new Process($command, $this->path);
         $process->setPty($pty);
         $process->setTty($tty);
 
         return $process;
-    }
-
-    /**
-     * @param Process $process
-     * @param bool $display
-     */
-    protected function runProcess(Process $process, $display = true)
-    {
-        false === $display ? $process->run() : $process->run(function ($type, $buffer) {
-            $this->output->write($buffer, true);
-        });
     }
 }

@@ -5,6 +5,7 @@ namespace FosterMade\Rokanan\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
+use Symfony\Component\Process\Process;
 use Symfony\Component\Yaml\Yaml;
 
 class SystemCheckCommand extends Command
@@ -50,7 +51,7 @@ EOS
             $version = Yaml::parseFile("{$this->root}/dependencies/{$dependency}/version.yaml");
 
             $process = $this->createProcess($version['check'], false, false);
-            $this->runProcess($process, false);
+            $process->run();
 
             if ($process->getExitCode() === 0) {
                 $this->output->write("<info>✔</info>", true);
@@ -75,8 +76,8 @@ EOS
                 $install = $helper->ask($this->input, $this->output, $question);
 
                 if (strtolower($install) === 'y') {
-                    $process = $this->createProcess($version['install'], true, true);
-                    $this->runProcess($process);
+                    $process = $this->createProcess($version['install']);
+                    $process->run();
 
                     if ($process->isSuccessful()) {
                         $this->output->writeln("<comment>{$dependency} was successfully installed.</comment>");
@@ -93,7 +94,7 @@ EOS
             foreach ($tests as $test) {
                 $this->output->write(str_repeat(' ', 2)."<comment>• {$test['description']}</comment> ");
                 $process = $this->createProcess($test['command'], false, false);
-                $this->runProcess($process, false);
+                $process->run();
 
                 if ($process->isSuccessful()) {
                     $this->output->write("<info>✔</info>", true);
@@ -113,7 +114,7 @@ EOS
 
                 if (strtolower($fix) === 'y') {
                     $process = $this->createProcess($test['correction']);
-                    $this->runProcess($process);
+                    $process->run();
 
                     if ($process->isSuccessful()) {
                         $this->output->writeln(str_repeat(' ', 4)."<comment>{$test['success']}</comment>");
