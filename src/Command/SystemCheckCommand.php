@@ -3,6 +3,7 @@
 namespace FosterMade\Rokanan\Command;
 
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Process\Process;
@@ -20,6 +21,7 @@ class SystemCheckCommand extends Command
         $this
             ->setName('system-check')
             ->setAliases(['check'])
+            ->addOption('fix', 'f', InputOption::VALUE_NONE, 'Whether to attempt to fix missing dependencies')
             ->setDescription('Checks the system for all prerequisites with an option to fix missing dependencies')
             ->setHelp(
                 <<<EOS
@@ -48,15 +50,19 @@ EOS
         foreach ($dependencies as $dependency) {
             $this->output->write("<comment>• Checking that {$dependency} is installed</comment> ");
 
+
             $version = Yaml::parseFile("{$this->root}/dependencies/{$dependency}/version.yaml");
 
-            $process = $this->createProcess($version['check'], false, false);
+            $process = $this->createProcess("which {$version['binary']}", false, false);
             $process->run();
 
-            if ($process->getExitCode() === 0) {
+            if ($process->isSuccessful()) {
                 $this->output->write("<info>✔</info>", true);
 
                 if ($version['version'] !== 0) {
+                    $process = $this->createProcess($version['check'], false, false);
+                    $process->run();
+
                     $installed = trim($process->getOutput());
 
                     $this->output->writeln(str_repeat(' ', 2)."<comment>• Checking that the installed {$dependency} version is compatible</comment>");
@@ -69,13 +75,9 @@ EOS
                     }
                 }
             } else {
-
                 $this->output->write("<info>✘</info>", true);
 
-                $question = new Question("{$dependency} could not be found. Do you want to try to install it? (y/N)", "N");
-                $install = $helper->ask($this->input, $this->output, $question);
-
-                if (strtolower($install) === 'y') {
+                if ($this->input->getOption('fix')) {
                     $process = $this->createProcess($version['install']);
                     $process->run();
 
@@ -103,11 +105,13 @@ EOS
 
                 $this->output->write("<info>✘</info>", true);
 
-                $fix = ($test['required']) ? 'y' : 'n';
+                if (!$this->input->getOption('fix')) {
+                    continue;
+                }
 
-                if ($test['required']) {
-                    $this->output->writeln(str_repeat(' ', 4)."<comment>{$test['message']}</comment>");
-                } else {
+                $fix = (isset($test['optional']) && $test['optional']) ? 'n' : 'y';
+
+                if ($fix !== 'y') {
                     $question = new Question(str_repeat(' ', 4).'<comment>' . $test['message'] . " (y/N)</comment> ", "N");
                     $fix = $helper->ask($this->input, $this->output, $question);
                 }

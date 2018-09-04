@@ -1,7 +1,8 @@
 ---
 version: 2.7.0
 operator: '>'
-description: There are currently no VirtualBox version requirements
+description: The minimum version of Ansible is 2.7.0.
+binary: python
 check: |
   # Python version may go to stderr depending on the version
   python -V 2>&1 | cut -d' ' -f2
@@ -10,6 +11,7 @@ install: |
 
 additional_tests:
   - description: Checking if python is managed by homebrew
+    optional: true
     command: |
       which python | grep /usr/local/bin/python
     message: 'It appears you are using the system-installed Python. Do you want to manage it with homebrew instead?'

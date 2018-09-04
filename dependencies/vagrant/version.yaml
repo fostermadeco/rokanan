@@ -2,6 +2,7 @@
 version: 2.0.0
 operator: '>'
 description: Please use Vagrant 2.0 or higher (2.1 preferred)
+binary: vagrant
 check: |
   vagrant --version | cut -d' ' -f2
 install: |
@@ -10,33 +11,30 @@ install: |
 additional_tests:
   - description: Checking that the vagrant-hostsupdater plugin is installed
     command: |
-      vagrant plugin list --machine-readable | awk -F, '/plugin-name/ && /vagrant-hostsupdater/ { print $NF }'
+      [ ! -z `vagrant plugin list --machine-readable | awk -F, '/plugin-name/ && /vagrant-hostsupdater/ { print $NF }'` ]
     message: |
       The vagrant-hostsupdater plugin is required to automatically add entries to `/etc/hosts`.
     correction: |
       vagrant plugin install vagrant-hostsupdater
-    required: true
     success: >
       The vagrant-hostsupdater plugin was successfully installed.
 
   - description: Checking that the vagrant-triggers plugin is installed
     command: |
-      vagrant plugin list --machine-readable | awk -F, '/plugin-name/ && /vagrant-triggers/ { print $NF }'
+      [ ! -z `vagrant plugin list --machine-readable | awk -F, '/plugin-name/ && /vagrant-triggers/ { print $NF }'` ]
     message: |
       The vagrant-hostsupdater plugin is required to hook into the Vagrant action cycle.
     correction: |
       vagrant plugin install vagrant-triggers
-    required: true
     success: >
       The vagrant-triggers plugin was successfully installed
 
   - description: Checking that the vagrant-disksize plugin is installed
     command: |
-        vagrant plugin list --machine-readable | awk -F, '/plugin-name/ && /vagrant-disksize/ { print $NF }'
+      [ ! -z `vagrant plugin list --machine-readable | awk -F, '/plugin-name/ && /vagrant-disksize/ { print $NF }'` ]
     message: |
         The vagrant-disksize plugin is required to resizes new VMs to a usable size.
     correction: |
         vagrant plugin install vagrant-disksize
-    required: true
     success: >
       The vagrant-disksize plugin was successfully installed.

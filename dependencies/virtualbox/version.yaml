@@ -2,6 +2,7 @@
 version: 0
 operator: '>'
 description: There are currently no VirtualBox version requirements
+binary: vboxmanage
 check: |
     vboxmanage --version | cut -dr -f1
 install: |

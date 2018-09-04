@@ -1,8 +1,9 @@
 ---
 version: 2.4.0
 operator: '>='
-description: The minimum version of Ansible is 2.4.0. Please update by running `pip install --upgrade ansible`.
+description: The minimum version of Ansible is 2.4.0.
+binary: ansible
 check: |
-    ansible --version | head -n1 | cut -d' ' -f2
+  ansible --version | head -n1 | cut -d' ' -f2
 install: |
-    pip install ansible
+  pip install ansible
