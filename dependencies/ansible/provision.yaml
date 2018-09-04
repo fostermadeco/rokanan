@@ -15,14 +15,6 @@
         src: files/gitconfig.j2
         dest: /home/vagrant/.gitconfig
 
-    - name: copy profile files
-      copy:
-        src: '{{ item }}'
-        dest: /home/vagrant
-        force: no
-      with_fileglob:
-        - files/dot/.*
-
     - name: change into project directory on login
       lineinfile:
         path: ~/.bashrc
