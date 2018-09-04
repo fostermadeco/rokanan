@@ -77,4 +77,17 @@ class Command extends BaseCommand
 
         return $process;
     }
+
+    /**
+     * @param string|array $command
+     * @return Process
+     */
+    protected function createVagrantProcess($command)
+    {
+        $process = $this->createProcess($command);
+        $process->inheritEnvironmentVariables();
+        $process->setEnv(['VAGRANT_USE_VAGRANT_TRIGGERS' => 1]);
+
+        return $process;
+    }
 }

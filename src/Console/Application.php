@@ -23,6 +23,8 @@ class Application extends BaseApplication
         return array_merge(parent::getDefaultCommands(), [
             new Command\SystemCheckCommand(),
             new Command\InitializeProjectCommand(),
+            new Command\ConnectCommand(),
+            new Command\RunCommand(),
         ]);
     }
 }
