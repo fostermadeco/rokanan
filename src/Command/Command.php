@@ -8,6 +8,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
+use Symfony\Component\Yaml\Yaml;
 
 class Command extends BaseCommand
 {
@@ -42,6 +43,11 @@ class Command extends BaseCommand
     protected $output;
 
     /**
+     * @var string
+     */
+    protected $projectRoot;
+
+    /**
      * {@inheritdoc}
      */
     protected function configure()
@@ -60,6 +66,9 @@ class Command extends BaseCommand
 
         $this->input = $input;
         $this->output = $output;
+
+        $vars = Yaml::parseFile($this->path.'/ansible/host_vars/local');
+        $this->projectRoot = '/var/www/'.$vars['hostname'];
     }
 
     /**

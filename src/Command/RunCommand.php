@@ -28,6 +28,8 @@ to retain control over environment variables (like VAGRANT_USE_VAGRANT_TRIGGERS)
 EOS
             )
         ;
+
+        parent::configure();
     }
 
     /**
@@ -35,7 +37,10 @@ EOS
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $process = $this->createVagrantProcess(['vagrant', 'ssh', '-c', $input->getArgument('subcommand')]);
+        parent::execute($input, $output);
+
+        $subcommand = "cd {$this->projectRoot};".$input->getArgument('subcommand');
+        $process = $this->createVagrantProcess(['vagrant', 'ssh', '-c', $subcommand]);
         $process->run();
         exit($process->getExitCode());
     }

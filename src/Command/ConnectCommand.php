@@ -29,6 +29,8 @@ run any pre/post tasks.
 EOS
             )
         ;
+
+        parent::configure();
     }
 
     /**
@@ -36,6 +38,8 @@ EOS
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        parent::execute($input, $output);
+
         $process = $this->createVagrantProcess('vagrant ssh');
         $process->run();
         exit($process->getExitCode());

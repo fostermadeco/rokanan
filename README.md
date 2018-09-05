@@ -66,4 +66,4 @@ This is effectively a wrapper around `vagrant ssh`. All wrapped vagrant commands
 
 ### `rokanan run [subcommand]`
 
-This will run a command inside the provisioned VM without creating a session.
+This will run a command inside the provisioned VM without creating a session. The command will be run in the project directory (`/var/www/{{ hostname }}`).
