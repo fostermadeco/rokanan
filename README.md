@@ -26,13 +26,13 @@ Rokanan requires several Symfony components at version `^3.4`, because this is t
 
 You may therefore experience some conflicts with installed versions of these components, especially if you have globally installed Laravel Envoy or Homestead. If this is the case, you must also require these components at `^3.4` in your global “project”. You can do this by adding, for example, the following to `~/.composer/composer.json`:
 
-```json
+```
     "require": {
-        . . ., 
+        [...], 
         "symfony/console": "^3.4",
         "symfony/process": "^3.4",
         "symfony/yaml": "^3.4",
-        . . .
+        [...]
     }
 ```
 
