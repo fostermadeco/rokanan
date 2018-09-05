@@ -1,12 +1,14 @@
 ---
-version: 2.0.0
-operator: '>'
-description: Please use Vagrant 2.0 or higher (2.1 preferred)
+version: 2.1.2
+operator: '<='
+description: |
+  Vagrant 2.1.2 or lower is required to maintain compatibility with older projects
+  (See https://github.com/hashicorp/vagrant/issues/10161)
 binary: vagrant
 check: |
   vagrant --version | cut -d' ' -f2
 install: |
-  HOMEBREW_NO_AUTO_UPDATE=1 brew cask install vagrant
+  HOMEBREW_NO_AUTO_UPDATE=1 brew cask install https://raw.githubusercontent.com/Homebrew/homebrew-cask/eeb3bf562ebfdc8960f3d2db0b6aa2ad747aaf75/Casks/vagrant.rb
 
 additional_tests:
   - description: Checking that the vagrant-hostsupdater plugin is installed
