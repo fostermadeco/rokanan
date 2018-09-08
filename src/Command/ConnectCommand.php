@@ -13,6 +13,8 @@ class ConnectCommand extends Command
      */
     protected function configure()
     {
+        parent::configure();
+
         $this
             ->setName('connect')
             ->setAliases(['ssh'])
@@ -29,8 +31,6 @@ run any pre/post tasks.
 EOS
             )
         ;
-
-        parent::configure();
     }
 
     /**

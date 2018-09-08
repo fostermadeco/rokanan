@@ -46,7 +46,7 @@ class InitializeProjectCommand extends Command
 
         if (!in_array($this->getVagrantStatus(), ['', 'not created'])) {
             throw new \Exception(
-                'An existing Vagrant environment has been detected in '.$this->path.'.'.PHP_EOL.
+                'An existing Vagrant environment has been detected in '.$this->cwd.'.'.PHP_EOL.
                 'Please destroy it before initializing it as a Rokanan project.'
             );
         }
@@ -129,7 +129,7 @@ EOS;
             }
         }
 
-        $provisionFile = $this->path.'/ansible/provision_dev.yaml';
+        $provisionFile = $this->cwd.'/ansible/provision_dev.yaml';
         $this->filesystem->dumpFile($provisionFile, Yaml::dump($provision, 10, 2));
         $this->filesystem->appendToFile($provisionFile, PHP_EOL.<<< EOS
     # This is your provision file! Add any custom provisioning
@@ -146,7 +146,7 @@ EOS
     {
         $config = Yaml::parseFile($this->root.'/dependencies/ansible/config.yaml');
         $config['defaults']['roles_path'] = $this->anonymousRolesPath;
-        $configFile = $this->path.'/ansible.cfg';
+        $configFile = $this->cwd.'/ansible.cfg';
 
         foreach ($config as $section => $values) {
             $this->filesystem->appendToFile($configFile, "[{$section}]".PHP_EOL);
@@ -162,7 +162,7 @@ EOS
      */
     protected function createVagrantFile()
     {
-        $this->filesystem->copy($this->root.'/dependencies/vagrant/Vagrantfile', $this->path.'/Vagrantfile');
+        $this->filesystem->copy($this->root.'/dependencies/vagrant/Vagrantfile', $this->cwd.'/Vagrantfile');
     }
 
     /**
@@ -170,7 +170,7 @@ EOS
      */
     protected function createRokananLockFile()
     {
-        $lockFile = $this->path.'/rokanan.lock';
+        $lockFile = $this->cwd.'/rokanan.lock';
         $this->filesystem->dumpFile($lockFile, $this->getGitHead().PHP_EOL);
     }
 
@@ -179,7 +179,7 @@ EOS
      */
     protected function getVagrantStatus()
     {
-        $process = new Process('vagrant status --machine-readable | awk -F, \'/state-human-short/ { print $NF }\'', $this->path);
+        $process = new Process('vagrant status --machine-readable | awk -F, \'/state-human-short/ { print $NF }\'', $this->cwd);
         $process->run();
 
         return trim($process->getOutput());

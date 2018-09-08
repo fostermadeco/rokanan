@@ -30,7 +30,7 @@ class Command extends BaseCommand
     /**
      * @var string
      */
-    protected $path;
+    protected $cwd;
 
     /**
      * @var InputInterface
@@ -52,7 +52,7 @@ class Command extends BaseCommand
      */
     protected function configure()
     {
-        $this->addArgument('path', InputArgument::OPTIONAL, 'The path to the project to initialize', '.');
+        $this->addOption('working-dir', 'd', InputArgument::OPTIONAL, 'If specified, use the given directory as working directory.', '.');
         $this->filesystem = new Filesystem();
     }
 
@@ -62,12 +62,12 @@ class Command extends BaseCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->root = realpath(__DIR__.'/../..');
-        $this->path = realpath($input->getArgument('path'));
+        $this->cwd = realpath($input->getOption('working-dir'));
 
         $this->input = $input;
         $this->output = $output;
 
-        $vars = Yaml::parseFile($this->path.'/ansible/host_vars/local');
+        $vars = Yaml::parseFile($this->cwd.'/ansible/host_vars/local');
         $this->projectRoot = '/var/www/'.$vars['hostname'];
     }
 
@@ -80,7 +80,7 @@ class Command extends BaseCommand
      */
     protected function createProcess($command, $pty = true, $tty = true, $cwd = null)
     {
-        $process = new Process($command, $this->path);
+        $process = new Process($command, $cwd ?: $this->cwd);
         $process->setPty($pty);
         $process->setTty($tty);
 

@@ -13,6 +13,8 @@ class RunCommand extends Command
      */
     protected function configure()
     {
+        parent::configure();
+
         $this
             ->setName('run')
             ->addArgument('subcommand', InputArgument::REQUIRED)
@@ -28,8 +30,6 @@ to retain control over environment variables (like VAGRANT_USE_VAGRANT_TRIGGERS)
 EOS
             )
         ;
-
-        parent::configure();
     }
 
     /**
