@@ -67,8 +67,11 @@ class Command extends BaseCommand
         $this->input = $input;
         $this->output = $output;
 
-        $vars = Yaml::parseFile($this->cwd.'/ansible/host_vars/local');
-        $this->projectRoot = '/var/www/'.$vars['hostname'];
+        $localVars = $this->cwd.'/ansible/host_vars/local';
+        if ($this->filesystem->exists($localVars)) {
+            $vars = Yaml::parseFile($localVars);
+            $this->projectRoot = '/var/www/'.$vars['hostname'];
+        }
     }
 
     /**
