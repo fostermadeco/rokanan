@@ -1,0 +1,79 @@
+- name: stat activemq
+  stat:
+    path: /usr/local/lib/activemq
+  register: activemq
+  tags:
+    - activemq
+
+- name: detect activemq_hostname value
+  set_fact:
+    activemq_hostname: '{{ "activemq." ~ hostname }}'
+  when: activemq_hostname is not defined
+
+- block:
+
+    - name: install java
+      apt:
+        name: default-jre
+        state: present
+        update_cache: yes
+
+    - name: set activemq version when undefined
+      set_fact:
+        activemq_version: 5.15.6
+      when: activemq_version is not defined
+
+    - name: download activemq source
+      get_url:
+        url: http://www.apache.org/dyn/closer.cgi?filename=/activemq/{{ activemq_version }}/apache-activemq-{{ activemq_version }}-bin.tar.gz&action=download
+        dest: /usr/local/lib/activemq.tar.gz
+
+    - name: ensure destination directory exists
+      file:
+        path: /usr/local/lib/activemq
+        state: directory
+
+    - name: unarchive the downloaded package
+      unarchive:
+        remote_src: yes
+        src: /usr/local/lib/activemq.tar.gz
+        dest: /usr/local/lib/activemq
+        extra_opts:
+          - "--strip-components=1"
+
+    - name: remove the downloaded package
+      file:
+        path: /usr/local/lib/activemq.tar.gz
+        state: absent
+
+    - name: create activemq service
+      template:
+        src: ../templates/activemq.service.j2
+        dest: /lib/systemd/system/activemq.service
+
+  become: yes
+  when: activemq.stat.exists == false
+  tags:
+    - activemq
+
+- name: create virtual host
+  include_role:
+    name: lamp
+    tasks_from: create_vhost
+  vars:
+    server_name: "{{ activemq_hostname }}"
+    port: 8161
+    type: reverse_proxy
+  tags:
+    - vhost
+    - activemq
+
+- name: ensure activemq is started
+  become: yes
+  systemd:
+    daemon_reload: yes
+    name: activemq
+    state: started
+    enabled: yes
+  tags:
+    - activemq

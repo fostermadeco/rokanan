@@ -1,0 +1,16 @@
+[Unit]
+Description=Apache ActiveMQ
+After=network-online.target
+Documentation=http://activemq.apache.org/
+
+[Service]
+Type=forking
+WorkingDirectory=/usr/local/lib/activemq/bin
+ExecStart=/usr/local/lib/activemq/bin/activemq start
+ExecStop=/usr/local/lib/activemq/bin/activemq stop
+Restart=on-abort
+User=root
+Group=staff
+
+[Install]
+WantedBy=multi-user.target
