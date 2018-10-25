@@ -1,0 +1,50 @@
+---
+- name: add rabbitmq repo key
+  become: yes
+  apt_key:
+    keyserver: hkps.pool.sks-keyservers.net
+    id: '0x6B73A36E6026DFCA'
+  tags:
+    - rabbitmq
+
+- name: add repository
+  become: yes
+  copy:
+    dest: "/etc/apt/sources.list.d/bintray.rabbitmq.list"
+    content: deb https://dl.bintray.com/rabbitmq/debian bionic main erlang
+  tags:
+    - rabbitmq
+
+- name: enable management plugin
+  become: yes
+  copy:
+    dest: "/etc/rabbitmq/enabled_plugins"
+    content: '[rabbitmq_management].'
+  tags:
+    - rabbitmq
+
+- name: allow remote guest access
+  become: yes
+  copy:
+    dest: "/etc/rabbitmq/rabbitmq.conf"
+    content: 'loopback_users = none'
+  tags:
+    - rabbitmq
+
+- name: install rabbitmq-server
+  become: yes
+  apt:
+    name: rabbitmq-server
+    state: present
+    update_cache: yes
+  tags:
+    - rabbitmq
+
+- name: ensure rabbitmq is started
+  become: yes
+  service:
+    name: rabbitmq-server
+    state: started
+    enabled: yes
+  tags:
+    - rabbitmq
