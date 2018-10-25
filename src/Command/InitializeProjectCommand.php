@@ -68,7 +68,6 @@ class InitializeProjectCommand extends Command
         $this->rolesPath = $this->root.'/dependencies/ansible/roles';
         $this->anonymousRolesPath = substr_replace($this->rolesPath, '~', 0, strlen(getenv('HOME')));
         $provision[0]['tasks'][1]['template']['src'] = dirname($this->anonymousRolesPath)."/{$provision[0]['tasks'][1]['template']['src']}";
-        $provision[0]['tasks'][2]['with_fileglob'][0] = dirname($this->anonymousRolesPath)."/{$provision[0]['tasks'][2]['with_fileglob'][0]}";
         $helper = $this->getHelper('question');
 
         $finder = new Finder();
