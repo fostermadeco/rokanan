@@ -9,7 +9,7 @@ use Symfony\Component\Process\Process;
 class ConnectCommand extends Command
 {
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     protected function configure()
     {
@@ -34,7 +34,7 @@ EOS
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {

@@ -8,7 +8,7 @@ use Symfony\Component\Console\Application as BaseApplication;
 class Application extends BaseApplication
 {
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function __construct()
     {
@@ -16,7 +16,7 @@ class Application extends BaseApplication
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     protected function getDefaultCommands()
     {

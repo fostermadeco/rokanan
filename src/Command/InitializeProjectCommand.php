@@ -23,7 +23,7 @@ class InitializeProjectCommand extends Command
     protected $anonymousRolesPath;
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     protected function configure()
     {
@@ -36,7 +36,7 @@ class InitializeProjectCommand extends Command
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      *
      * @throws \Exception
      */

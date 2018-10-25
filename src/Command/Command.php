@@ -48,7 +48,7 @@ class Command extends BaseCommand
     protected $projectRoot;
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     protected function configure()
     {
@@ -57,7 +57,7 @@ class Command extends BaseCommand
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
