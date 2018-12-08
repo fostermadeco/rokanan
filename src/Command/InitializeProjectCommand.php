@@ -6,12 +6,30 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Finder\Finder;
-use Symfony\Component\Process\InputStream;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Yaml\Yaml;
 
 class InitializeProjectCommand extends Command
 {
+    /**
+     * @var string
+     */
+    const GIT_IGNORE_CONTEXT = "\n###> rokanan ###\n%s\n###< rokanan ###\n";
+
+    /**
+     * @var array
+     */
+    protected $ansibleIgnorePatterns = [
+        '*.retry',
+    ];
+
+    /**
+     * @var array
+     */
+    protected $projectIgnorePatterns = [
+        'ubuntu-*-console.log',
+    ];
+
     /**
      * @var string
      */
@@ -55,11 +73,9 @@ class InitializeProjectCommand extends Command
         $this->createAnsibleConfigFile();
         $this->createVagrantFile();
         $this->createRokananLockFile();
+        $this->addGitIgnorePatterns();
     }
 
-    /**
-     *
-     */
     protected function buildProvisionFile()
     {
         $this->output->writeln('<comment>Let’s build a provision file . . .</comment>');
@@ -139,9 +155,6 @@ EOS
         );
     }
 
-    /**
-     *
-     */
     protected function createAnsibleConfigFile()
     {
         $config = Yaml::parseFile($this->root.'/dependencies/ansible/config.yaml');
@@ -157,21 +170,21 @@ EOS
         }
     }
 
-    /**
-     *
-     */
     protected function createVagrantFile()
     {
         $this->filesystem->copy($this->root.'/dependencies/vagrant/Vagrantfile', $this->cwd.'/Vagrantfile');
     }
 
-    /**
-     *
-     */
     protected function createRokananLockFile()
     {
         $lockFile = $this->cwd.'/rokanan.lock';
         $this->filesystem->dumpFile($lockFile, $this->getGitHead().PHP_EOL);
+    }
+
+    protected function addGitIgnorePatterns()
+    {
+        $this->filesystem->dumpFile($this->cwd.'/ansible/.gitignore', sprintf(static::GIT_IGNORE_CONTEXT, join("\n", $this->ansibleIgnorePatterns)));
+        $this->filesystem->appendToFile($this->cwd.'/.gitignore', sprintf(static::GIT_IGNORE_CONTEXT, join("\n", $this->projectIgnorePatterns)));
     }
 
     /**
