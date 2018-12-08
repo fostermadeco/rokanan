@@ -1,6 +1,9 @@
 ---
 - hosts: local
 
+  vars:
+    composer_home: '{{ lookup("pipe", "composer -ng config home") }}'
+
   roles:
     - system
     - lamp

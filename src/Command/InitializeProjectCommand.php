@@ -66,8 +66,9 @@ class InitializeProjectCommand extends Command
 
         $provision = Yaml::parseFile($this->root.'/dependencies/ansible/provision.yaml');
         $this->rolesPath = $this->root.'/dependencies/ansible/roles';
-        $this->anonymousRolesPath = substr_replace($this->rolesPath, '~', 0, strlen(getenv('HOME')));
-        $provision[0]['tasks'][1]['template']['src'] = dirname($this->anonymousRolesPath)."/{$provision[0]['tasks'][1]['template']['src']}";
+        $this->anonymousRolesPath = $this->anonymousRoot.'/dependencies/ansible/roles';
+        $provision[0]['tasks'][1]['template']['src'] = $this->anonymousRolesPath."/{$provision[0]['tasks'][1]['template']['src']}";
+
         $helper = $this->getHelper('question');
 
         $finder = new Finder();
@@ -80,7 +81,7 @@ class InitializeProjectCommand extends Command
 
         $text = <<<EOS
 <info>
-  Our system, lamp and node Ansible roles will be included by default.
+  Our ‘system’, ‘lamp’ and ‘node’ Ansible roles will be included by default.
   Please select any additional roles from which to include individual tasks.
   
   (Select multiple by entering a comma-delimited list, like “1,2,4”)
@@ -144,7 +145,7 @@ EOS
     protected function createAnsibleConfigFile()
     {
         $config = Yaml::parseFile($this->root.'/dependencies/ansible/config.yaml');
-        $config['defaults']['roles_path'] = $this->anonymousRolesPath;
+        $config['defaults']['roles_path'] = ':${COMPOSER_HOME}/vendor/fostermadeco/rokanan/dependencies/ansible/roles:~/.composer/vendor/fostermadeco/rokanan/dependencies/ansible/roles:/etc/ansible/roles:';
         $configFile = $this->cwd.'/ansible.cfg';
 
         foreach ($config as $section => $values) {

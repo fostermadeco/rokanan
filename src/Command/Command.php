@@ -30,6 +30,11 @@ class Command extends BaseCommand
     /**
      * @var string
      */
+    protected $anonymousRoot;
+
+    /**
+     * @var string
+     */
     protected $cwd;
 
     /**
@@ -61,7 +66,9 @@ class Command extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->root = realpath(__DIR__.'/../..');
+        $composerHome = trim((new Process('composer -ng config home'))->mustRun()->getOutput());
+        $this->root = $composerHome.'/vendor/fostermadeco/rokanan';
+        $this->anonymousRoot = str_replace($composerHome, '{{ composer_home }}', $this->root);
         $this->cwd = realpath($input->getOption('working-dir'));
 
         $this->input = $input;
