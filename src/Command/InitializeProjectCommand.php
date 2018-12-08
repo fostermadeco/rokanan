@@ -129,7 +129,7 @@ EOS;
             }
         }
 
-        $provisionFile = $this->cwd.'/ansible/provision_dev.yaml';
+        $provisionFile = $this->cwd.'/ansible/provision_local.yaml';
         $this->filesystem->dumpFile($provisionFile, Yaml::dump($provision, 10, 2));
         $this->filesystem->appendToFile($provisionFile, PHP_EOL.<<< EOS
     # This is your provision file! Add any custom provisioning
