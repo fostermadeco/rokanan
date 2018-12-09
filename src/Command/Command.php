@@ -18,39 +18,39 @@ class Command extends BaseCommand
     const SELECT_NONE = 'Select none';
 
     /**
-     * @var Filesystem
+     * @var string
      */
-    protected $filesystem;
+    protected $projectRoot;
 
     /**
      * @var string
      */
-    protected $root;
+    public $root;
 
     /**
      * @var string
      */
-    protected $anonymousRoot;
-
-    /**
-     * @var string
-     */
-    protected $cwd;
+    public $anonymousRoot;
 
     /**
      * @var InputInterface
      */
-    protected $input;
+    public $input;
 
     /**
      * @var OutputInterface
      */
-    protected $output;
+    public $output;
+
+    /**
+     * @var Filesystem
+     */
+    public $filesystem;
 
     /**
      * @var string
      */
-    protected $projectRoot;
+    public $cwd;
 
     /**
      * @inheritDoc
