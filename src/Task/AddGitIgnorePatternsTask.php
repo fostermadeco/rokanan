@@ -34,7 +34,7 @@ EOS;
     /**
      * @param Command $context
      */
-    public function __invoke(Command $context)
+    public function runInContext(Command $context)
     {
         $context->filesystem->dumpFile(
             $context->cwd.'/ansible/.gitignore',

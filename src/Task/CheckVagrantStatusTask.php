@@ -10,7 +10,7 @@ class CheckVagrantStatusTask
     /**
      * @throws \Exception
      */
-    public function __invoke(Command $context)
+    public function runInContext(Command $context)
     {
         $process = new Process('vagrant status --machine-readable | awk -F, \'/state-human-short/ { print $NF }\'', $context->cwd);
         $status = trim($process->mustRun()->getOutput());
