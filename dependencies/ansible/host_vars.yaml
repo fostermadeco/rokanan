@@ -1,0 +1,9 @@
+- name: hostname
+  question: What is the hostname for your VM? It should end with .test
+
+- name: email_hostname
+  question: What is the email hostname for your VM?
+  default: email.{{ hostname }}
+
+- name: private_address
+  question: What is the private address for your VM?

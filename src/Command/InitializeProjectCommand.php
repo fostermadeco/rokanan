@@ -3,6 +3,7 @@
 namespace FosterMade\Rokanan\Command;
 
 use FosterMade\Rokanan\Task\AddGitIgnorePatternsTask;
+use FosterMade\Rokanan\Task\BuildHostFilesTask;
 use FosterMade\Rokanan\Task\BuildProvisionFileTask;
 use FosterMade\Rokanan\Task\CheckVagrantStatusTask;
 use FosterMade\Rokanan\Task\CreateAnsibleConfigTask;
@@ -36,6 +37,7 @@ class InitializeProjectCommand extends Command
         parent::execute($input, $output);
 
         (new CheckVagrantStatusTask())->runInContext($this);
+        (new BuildHostFilesTask())->runInContext($this);
         (new BuildProvisionFileTask())->runInContext($this);
         (new CreateAnsibleConfigTask())->runInContext($this);
         (new CreateVagrantfileTask())->runInContext($this);
