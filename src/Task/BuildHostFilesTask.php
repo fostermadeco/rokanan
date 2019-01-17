@@ -24,9 +24,11 @@ class BuildHostFilesTask
 
         $this->buildHostVarsFile();
         $this->buildHostsFile();
+
+        $context->vars += $this->vars;
     }
 
-    public function buildHostVarsFile()
+    protected function buildHostVarsFile()
     {
         $vars = Yaml::parseFile($this->context->root.'/dependencies/ansible/host_vars.yaml');
 
@@ -49,7 +51,7 @@ class BuildHostFilesTask
         $this->context->filesystem->dumpFile($hostVarsFile, Yaml::dump($this->vars, 10, 2));
     }
 
-    public function buildHostsFile()
+    protected function buildHostsFile()
     {
         $hosts = Yaml::parseFile($this->context->root.'/dependencies/ansible/hosts');
         $hosts['all']['hosts']['local']['ansible_host'] = $this->vars['hostname'];

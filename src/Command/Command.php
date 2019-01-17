@@ -53,6 +53,11 @@ class Command extends BaseCommand
     public $cwd;
 
     /**
+     * @var array
+     */
+    public $vars = [];
+
+    /**
      * @inheritDoc
      */
     protected function configure()
