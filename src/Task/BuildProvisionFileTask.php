@@ -26,7 +26,7 @@ class BuildProvisionFileTask
         $provision = Yaml::parseFile($context->root.'/dependencies/ansible/provision.yaml');
         $this->rolesPath = $context->root.'/dependencies/ansible/roles';
         $this->anonymousRolesPath = $context->anonymousRoot.'/dependencies/ansible/roles';
-        $provision[0]['tasks'][1]['template']['src'] = $this->anonymousRolesPath."/{$provision[0]['tasks'][1]['template']['src']}";
+        $provision[0]['tasks'][1]['template']['src'] = $context->anonymousRoot."/dependencies/ansible/{$provision[0]['tasks'][1]['template']['src']}";
 
         $helper = $context->getHelper('question');
 
