@@ -23,3 +23,9 @@
         path: ~/.bashrc
         line: cd /var/www/{{ hostname }}
         state: present
+
+    - name: disable release upgrade notifications
+      become: yes
+      file:
+        path: /etc/update-motd.d/91-release-upgrade
+        mode: -x
