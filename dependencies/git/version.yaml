@@ -1,0 +1,33 @@
+---
+version: 0
+operator: '>'
+description: There are currently no Git version requirements
+binary: git
+check: |
+  git --version | cut -d' ' -f3
+install: |
+  (xcode-select -p > /dev/null || xcode-select --install) && \
+  /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" && \
+  HOMEBREW_NO_AUTO_UPDATE=1 brew install coreutils && \
+  HOMEBREW_NO_AUTO_UPDATE=1 brew install gnu-sed
+
+additional_tests:
+  - description: Checking if git user.name is set
+    optional: false
+    command: |
+      [ -z `git config --global user.name > /dev/null || echo $?` ]
+    message: 'Your git user name should be set'
+    correction: |
+      echo "Enter your git user name:" && read name && git config --global user.name "$name"
+    success: 'Your git user name has been updated'
+    decline: 'It is up to you to set your git user name'
+
+  - description: Checking if git user.email is set
+    optional: false
+    command: |
+      [ -z `git config --global user.email > /dev/null || echo $?` ]
+    message: 'Your git email address should be set'
+    correction: |
+      echo "Enter your git email address:" && read email && git config --global user.email "$email"
+    success: 'Your git email address has been updated'
+    decline: 'It is up to you to set your git email address'
