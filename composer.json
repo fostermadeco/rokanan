@@ -17,6 +17,7 @@
         "symfony/yaml": "^3.4"
     },
     "bin": [
+        "bin/rok",
         "bin/rokanan"
     ],
     "require-dev": {
