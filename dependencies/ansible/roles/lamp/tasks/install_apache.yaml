@@ -69,3 +69,10 @@
     - restart apache
   tags:
     - vhost
+
+- name: add vagrant to adm group to grant read access to apache logs
+  become: yes
+  user:
+    name: vagrant
+    append: yes
+    groups: adm
