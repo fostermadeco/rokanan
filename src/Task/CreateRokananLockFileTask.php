@@ -9,7 +9,7 @@ class CreateRokananLockFileTask
 {
     public function runInContext(Command $context)
     {
-        $process = new Process('git rev-parse HEAD', $context->cwd);
+        $process = new Process('git rev-parse HEAD', $context->root);
         $head = trim($process->mustRun()->getOutput());
         $context->filesystem->dumpFile($context->cwd.'/rokanan.lock', $head.PHP_EOL);
     }
