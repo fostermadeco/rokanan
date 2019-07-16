@@ -7,13 +7,73 @@
   tags:
     - rabbitmq
 
+- name: install apt-transport-https
+  become: yes
+  apt:
+    name: apt-transport-https
+    state: present
+  tags:
+    - rabbitmq
+
+- name: Add erlang source list file
+  become: yes
+  copy:
+    dest: "/etc/apt/sources.list.d/bintray.erlang.list"
+    content: deb http://dl.bintray.com/rabbitmq-erlang/debian bionic erlang-21.x
+  tags:
+    - rabbitmq
+
+- name: pin erlang to bintray repo
+  become: yes
+  copy:
+    dest: "/etc/apt/preferences.d/erlang"
+    content: |
+      Package: erlang*
+      Pin: release o=Bintray
+      Pin-Priority: 1000
+  tags:
+    - rabbitmq
+
+- name: install erlang packages
+  become: yes
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items:
+    - erlang-base
+    - erlang-asn1
+    - erlang-crypto
+    - erlang-eldap
+    - erlang-ftp
+    - erlang-inets
+    - erlang-mnesia
+    - erlang-os-mon
+    - erlang-parsetools
+    - erlang-public-key
+    - erlang-runtime-tools
+    - erlang-snmp
+    - erlang-ssl
+    - erlang-syntax-tools
+    - erlang-tftp
+    - erlang-tools
+    - erlang-xmerl
+  tags:
+    - rabbitmq
+
 - name: add repository
   become: yes
   copy:
     dest: "/etc/apt/sources.list.d/bintray.rabbitmq.list"
-    content: deb https://dl.bintray.com/rabbitmq/debian bionic main erlang
+    content: deb https://dl.bintray.com/rabbitmq/debian bionic main
   tags:
     - rabbitmq
+
+- name: create rabbitmq directory
+  become: yes
+  file:
+    path: /etc/rabbitmq
+    state: directory
 
 - name: enable management plugin
   become: yes
