@@ -12,12 +12,12 @@ class CheckVagrantStatusTask
      */
     public function runInContext(Command $context)
     {
-        $process = new Process('vagrant status --machine-readable | awk -F, \'/state-human-short/ { print $NF }\'', $context->cwd);
+        $process = new Process("vagrant status --machine-readable | awk -F, '/state-human-short/ { print \$NF }'", $context->cwd);
         $status = trim($process->mustRun()->getOutput());
 
         if (!in_array($status, ['', 'not created'])) {
             throw new \Exception(
-                'An existing Vagrant environment has been detected in '.$this->cwd.'.'.PHP_EOL.
+                'An existing Vagrant environment has been detected in '.$context->cwd.'.'.PHP_EOL.
                 'Please destroy it before initializing it as a Rokanan project.'
             );
         }
