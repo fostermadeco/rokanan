@@ -1,9 +1,9 @@
 ---
-version: 0
-operator: '>'
+version: '5.2.2'
+operator: '>='
 description: There are currently no VirtualBox version requirements
 binary: vboxmanage
 check: |
     vboxmanage --version | cut -dr -f1
 install: |
-    HOMEBREW_NO_AUTO_UPDATE=1 brew cask install virtualbox
+    HOMEBREW_NO_AUTO_UPDATE=1 brew cask install https://raw.githubusercontent.com/Homebrew/homebrew-cask/eabf6ef195fcc22b08c4260b7d16b466bfdc2e7d/Casks/virtualbox.rb && vboxmanage setextradata global GUI/UpdateDate never
