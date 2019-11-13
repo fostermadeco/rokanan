@@ -7,7 +7,7 @@ check: |
   # Python version may go to stderr depending on the version
   python -V 2>&1 | cut -d' ' -f2
 install: |
-  HOMEBREW_NO_AUTO_UPDATE=1 brew install virtualbox
+  HOMEBREW_NO_AUTO_UPDATE=1 brew install python@2
 
 additional_tests:
   - description: Checking if python is managed by homebrew
