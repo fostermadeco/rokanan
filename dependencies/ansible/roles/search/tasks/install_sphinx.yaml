@@ -1,17 +1,48 @@
 ---
-- name: install sphinx
-  become: yes
-  apt:
-    name: sphinxsearch
-    state: present
+- name: stat sphinx
+  stat:
+    path: /usr/local/bin/searchd
+  register: sphinx
   tags:
-      - sphinx
+    - sphinx
 
-- name: ensure sphinx is stopped
+- block:
+    - name: install sphinx
+      become: yes
+      apt:
+        name: libre2-dev
+        state: present
+
+    - name: download sphinx 2.2.11
+      get_url:
+        url: https://sphinxsearch.com/files/sphinx-2.2.11-release.tar.gz
+        checksum: md5:5cac34f3d78a9d612ca4301abfcbd666
+        dest: /tmp/sphinx-2.2.11-release.tar.gz
+
+    - name: unarchive the downloaded package
+      unarchive:
+        remote_src: yes
+        src: /tmp/sphinx-2.2.11-release.tar.gz
+        dest: /tmp
+
+    - name: install sphinx
+      command: "{{ item }}"
+      args:
+        chdir: /tmp/sphinx-2.2.11-release
+      with_items:
+        - ./configure --with-re2
+        - make
+        - make install
+
+    - name: remove downloaded files
+      file:
+        path: "/tmp/{{ item }}"
+        state: absent
+      with_items:
+        - sphinx-2.2.11-release.tar.gz
+        - sphinx-2.2.11-release
+
   become: yes
-  service:
-    name: sphinxsearch
-    state: stopped
-    enabled: no
+  when: sphinx.stat.exists == false
   tags:
-      - sphinx
+    - sphinx
