@@ -10,7 +10,7 @@
 
     - name: get latest freetds hash
       get_url:
-        url: ftp://ftp.freetds.org/pub/freetds/stable/freetds-patched.tar.gz.md5
+        url: https://www.freetds.org/files/stable/freetds-patched.tar.gz.md5
         dest: /tmp/freetds_hash
 
     - name: register the freetds hash
@@ -31,7 +31,7 @@
 
     - name: download the latest freetds version
       get_url:
-        url: ftp://ftp.freetds.org/pub/freetds/stable/freetds-patched.tar.gz
+        url: https://www.freetds.org/files/stable/freetds-patched.tar.gz
         checksum: md5:{{ freetds_hash.stdout }}
         dest: /tmp/freetds-patched.tar.gz
 
