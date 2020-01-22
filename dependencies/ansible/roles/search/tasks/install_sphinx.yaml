@@ -7,11 +7,16 @@
     - sphinx
 
 - block:
-    - name: install sphinx
+    - name: install packages required to build sphinx with mysql and re support
       become: yes
       apt:
-        name: libre2-dev
+        name: '{{ item }}'
         state: present
+        update_cache: yes
+      with_items:
+        - build-essential
+        - libre2-dev
+        - libmysqlclient-dev
 
     - name: download sphinx 2.2.11
       get_url:
