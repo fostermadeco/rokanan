@@ -35,7 +35,7 @@
       args:
         chdir: /tmp/sphinx-2.2.11-release
       with_items:
-        - ./configure --with-re2
+        - ./configure --with-re2 --with-mysql-libs /usr/include/mysql
         - make
         - make install
 
