@@ -7,8 +7,9 @@
 - name: download mailhog
   become: yes
   get_url:
-    url: https://github.com/mailhog/MailHog/releases/download/v0.2.1/MailHog_linux_amd64
+    url: https://github.com/mailhog/MailHog/releases/download/v1.0.0/MailHog_linux_amd64
     dest: /usr/local/bin/mailhog
+    force: yes
     mode: 0755
 
 - name: create mailhog service
@@ -22,7 +23,7 @@
   systemd:
     daemon_reload: yes
     name: mailhog
-    state: started
+    state: restarted
     enabled: yes
 
 - name: disable outbound 25 and 587 traffic (just in case)
@@ -52,5 +53,10 @@
     server_name: "{{ email_hostname }}"
     port: 8025
     type: reverse_proxy
+    extra: |
+      <Location /api/v2/websocket>
+        ProxyPass ws://127.0.0.1:8025/api/v2/websocket
+      </Location>
+
   tags:
     - vhost

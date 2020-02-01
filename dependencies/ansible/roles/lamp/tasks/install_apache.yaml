@@ -22,6 +22,7 @@
     - rewrite
     - ssl
     - proxy_http
+    - proxy_wstunnel
 
 - name: disable default sites
   become: yes
