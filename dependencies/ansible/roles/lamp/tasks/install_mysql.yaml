@@ -69,6 +69,7 @@
     dest: "/etc/mysql/my.cnf"
     option: "{{ item.option }}"
     section: "{{ item.section | default('mysqld') }}"
+    state: "{{ item.state | default('present') }}"
     value: "{{ item.value }}"
   notify:
     - restart mysql
