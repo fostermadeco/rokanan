@@ -1,0 +1,16 @@
+/* RESET */
+article, aside, figure, footer, header, main, nav, section {display:block;}
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, font, img, ins, kbd, q, s, samp, small, strike, strong, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, input, textarea, legend, button, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, figure, footer, header, nav, section {margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent;}
+ol, ul {list-style:none; list-style-image:url(data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7);}
+blockquote, q {quotes:none;}
+blockquote:before, blockquote:after, q:before, q:after {content:'';content:none;}
+button::-moz-focus-inner {border:0; padding:0;}
+img, iframe {display:block;}
+:focus {outline:0;}
+ins {text-decoration:none;}
+del {text-decoration:line-through;}
+table {border-collapse:collapse;border-spacing:0;}
+input[type="image"], input[type="text"], input[type="submit"], input[type="email"], input[type="tel"], input[type="number"], input[type="search"], input[type="password"], textarea { -webkit-appearance:none; -moz-appearance:none; -webkit-border-radius:0; }
+html { -webkit-text-size-adjust:100%; }
+* {-moz-box-sizing:border-box;-webkit-box-sizing:border-box;box-sizing:border-box;}
+/* END RESET */

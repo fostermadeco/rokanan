@@ -1,0 +1,54 @@
+  
+{
+    "name": "test-site",
+    "version": "1.0.0",
+    "description": "Example project of front end assets.",
+    "author": "Foster Made",
+    "license": "MIT",
+    "scripts": {
+        "dev": "node node_modules/cross-env/dist/bin/cross-env.js NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+        "w": "node node_modules/cross-env/dist/bin/cross-env.js NODE_ENV=development node_modules/webpack/bin/webpack.js --watch --watch-poll --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+        "watch": "node node_modules/cross-env/dist/bin/cross-env.js NODE_ENV=development node_modules/webpack/bin/webpack.js --watch --watch-poll --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+        "hot": "node node_modules/cross-env/dist/bin/cross-env.js NODE_ENV=development node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --hot --config=node_modules/laravel-mix/setup/webpack.config.js",
+        "production": "node node_modules/cross-env/dist/bin/cross-env.js NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+        "modernizr": "modernizr -c resources/js/lib/modernizr-config.json -d resources/js/lib/ -u"
+    },
+    "dependencies": {
+        "@babel/polyfill": "^7.4.4",
+        "bootstrap": "^4.3.1",
+        "core-js": "^2.6.9",
+        "cross-env": "^5.2.0",
+        "flexslider": "^2.7.2",
+        "laravel-mix": "^4.1.2",
+        "modernizr": "^3.7.1",
+        "normalize.css": "^8.0.1",
+        "parsleyjs": "^2.9.1",
+        "sass": "^1.22.9"
+    },
+    "devDependencies": {
+        "@fortawesome/fontawesome-free": "^5.10.2",
+        "babel-eslint": "^10.0.3",
+        "browser-sync": "^2.26.7",
+        "browser-sync-webpack-plugin": "^2.2.2",
+        "eslint": "^6.3.0",
+        "eslint-config-airbnb": "^18.0.1",
+        "eslint-config-airbnb-base": "^14.0.0",
+        "eslint-config-fostermade": "0.0.19-alpha.6",
+        "eslint-config-prettier": "^6.2.0",
+        "eslint-plugin-compat": "^3.3.0",
+        "eslint-plugin-html": "^6.0.0",
+        "eslint-plugin-import": "^2.18.2",
+        "eslint-plugin-jsx-a11y": "^6.2.3",
+        "eslint-plugin-prettier": "^3.1.0",
+        "eslint-plugin-react": "^7.14.3",
+        "eslint-plugin-react-hooks": "^2.0.1",
+        "prettier": "^1.18.2",
+        "resolve-url-loader": "^3.1.0",
+        "sass-loader": "^7.1.0",
+        "vue-template-compiler": "^2.6.10"
+    },
+    "browserslist": [
+        "last 1 version",
+        "> 1%"
+    ]
+}

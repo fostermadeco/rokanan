@@ -1,0 +1,35 @@
+/* Google Fonts */
+// @import url(https://fonts.googleapis.com/css?family=XXXXXXXXXXXXXXX);
+
+@import "variables";
+
+@import "~@fortawesome/fontawesome-free/scss/fontawesome";
+@import "~@fortawesome/fontawesome-free/scss/regular";
+@import "~@fortawesome/fontawesome-free/scss/brands";
+@import "~@fortawesome/fontawesome-free/scss/solid";
+@import "~bootstrap/scss/bootstrap";
+
+@import "~flexslider/flexslider.css";
+
+// @import '~normalize.css';
+
+/* Mixins */
+@import 'mixins/media-queries';
+
+/* CLEARING */
+.cleared:after {content:"."; display:block; height:0; clear:both; visibility:hidden;}
+.cleared {display:inline-block;}
+/* Hides from IE-mac \*/
+* html .cleared {height:1%;}
+.cleared {display:block;}
+/* End hide from IE-mac */
+/* END CLEARING */
+
+body {
+	visibility:visible !important;
+    background-color:pink;
+}
+
+::placeholder {
+    color: gray;
+}

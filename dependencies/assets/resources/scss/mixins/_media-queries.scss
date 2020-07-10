@@ -1,0 +1,41 @@
+$screen-sm-min: 768px;
+$screen-md-min: 992px;
+$screen-lg-min: 1200px;
+
+@mixin media-query($breakpoint) {
+    @if $breakpoint == "xsmall-only" {
+        @media screen and (max-width: $screen-sm-min - 1) {
+            @content;
+        }
+    }
+    @if $breakpoint == "small-only" {
+        @media screen and (min-width: $screen-sm-min) and (max-width: $screen-md-min - 1) {
+            @content;
+        }
+    }
+    @if $breakpoint == "medium-only" {
+        @media screen and (min-width: $screen-md-min) and (max-width: $screen-lg-min - 1) {
+            @content;
+        }
+    }
+    @if $breakpoint == "large-only" {
+        @media screen and (min-width: $screen-lg-min) {
+            @content;
+        }
+    }
+    @if $breakpoint == "small" {
+        @media screen and (min-width: $screen-sm-min) {
+            @content;
+        }
+    }
+    @else if $breakpoint == "medium" {
+        @media screen and (min-width: $screen-md-min) {
+            @content;
+        }
+    }
+    @else if $breakpoint == "large" {
+        @media screen and (min-width: $screen-lg-min) {
+            @content;
+        }
+    }
+}
