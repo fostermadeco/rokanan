@@ -12,7 +12,8 @@ Rokanan is a tool to simplify provisioning standard development environments acr
 
 ## Prerequisites
 
-PHP 5.6 and [Composer](https://getcomposer.org/)
+* PHP 7.1.3
+* [Composer](https://getcomposer.org/)
 
 ## Installation
 
@@ -22,16 +23,16 @@ Install Rokanan globally with Composer by running
 composer global require fostermadeco/rokanan dev-master
 ```
 
-Rokanan requires several Symfony components at version `^3.4`, because this is the current Symfony LTS version. It is also the last to support PHP 5.6, which is the system-provided PHP version with macOS Sierra.
+Rokanan requires several Symfony components at version `^4.4`, because this is the current Symfony LTS version.
 
-You may therefore experience some conflicts with installed versions of these components, especially if you have globally installed Laravel Envoy or Homestead. If this is the case, you must also require these components at `^3.4` in your global “project”. You can do this by adding, for example, the following to `~/.composer/composer.json`:
+You may therefore experience some conflicts with installed versions of these components, especially if you have globally installed Laravel Envoy or Homestead. If this is the case, you must also require these components at `^4.4` in your global “project”. You can do this by adding, for example, the following to `~/.composer/composer.json`:
 
 ```
     "require": {
         [...], 
-        "symfony/console": "^3.4",
-        "symfony/process": "^3.4",
-        "symfony/yaml": "^3.4",
+        "symfony/console": "^4.4",
+        "symfony/process": "^4.4",
+        "symfony/yaml": "^4.4",
         [...]
     }
 ```
@@ -42,7 +43,7 @@ Thereafter run
 composer global update symfony/console symfony/process symfony/yaml [. . .]
 ```
 
-Be sure to add any components for which Composer complains about locked versions — the above is only for illustration. If you have older versions of Envoy, Homestead or other packages that are incompatible with `^3.4` components, you will likely need to update them to newer versions also. 
+Be sure to add any components for which Composer complains about locked versions — the above is only for illustration. If you have older versions of Envoy, Homestead or other packages that are incompatible with `^4.4` components, you will likely need to update them to newer versions also. 
 
 ### Note on Homebrew
 
