@@ -18,7 +18,7 @@ class BuildHostFilesTask
      */
     protected $vars = [];
 
-    public function runInContext(Command $context)
+    public function __invoke(Command $context)
     {
         $this->context = $context;
 

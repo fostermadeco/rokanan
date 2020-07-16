@@ -31,10 +31,7 @@ EOS;
         'ubuntu-*-console.log',
     ];
 
-    /**
-     * @param Command $context
-     */
-    public function runInContext(Command $context)
+    public function __invoke(Command $context)
     {
         $context->filesystem->dumpFile(
             $context->cwd.'/ansible/.gitignore',

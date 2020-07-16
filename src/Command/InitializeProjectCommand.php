@@ -36,12 +36,12 @@ class InitializeProjectCommand extends Command
     {
         parent::execute($input, $output);
 
-        (new CheckVagrantStatusTask())->runInContext($this);
-        (new BuildHostFilesTask())->runInContext($this);
-        (new BuildProvisionFileTask())->runInContext($this);
-        (new CreateAnsibleConfigTask())->runInContext($this);
-        (new CreateVagrantfileTask())->runInContext($this);
-        (new CreateRokananLockFileTask())->runInContext($this);
-        (new AddGitIgnorePatternsTask())->runInContext($this);
+        (new CheckVagrantStatusTask())($this);
+        (new BuildHostFilesTask())($this);
+        (new BuildProvisionFileTask())($this);
+        (new CreateAnsibleConfigTask())($this);
+        (new CreateVagrantfileTask())($this);
+        (new CreateRokananLockFileTask())($this);
+        (new AddGitIgnorePatternsTask())($this);
     }
 }

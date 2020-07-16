@@ -6,7 +6,7 @@ use FosterMade\Rokanan\Command\Command;
 
 class CreateVagrantfileTask
 {
-    public function runInContext(Command $context)
+    public function __invoke(Command $context)
     {
         $context->filesystem->copy(
             $context->root.'/dependencies/vagrant/Vagrantfile',

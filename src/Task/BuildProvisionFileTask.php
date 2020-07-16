@@ -19,7 +19,7 @@ class BuildProvisionFileTask
      */
     protected $anonymousRolesPath;
 
-    public function runInContext(Command $context)
+    public function __invoke(Command $context)
     {
         $context->output->writeln('<comment>Let’s build a provision file . . .</comment>');
 

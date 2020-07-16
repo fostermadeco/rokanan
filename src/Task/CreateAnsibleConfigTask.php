@@ -10,7 +10,7 @@ class CreateAnsibleConfigTask
     /**
      * @param Command $context
      */
-    public function runInContext(Command $context)
+    public function __invoke(Command $context)
     {
         $config = Yaml::parseFile($context->root.'/dependencies/ansible/config.yaml');
         $config['defaults']['roles_path'] = ':${COMPOSER_HOME}/vendor/fostermadeco/rokanan/dependencies/ansible/roles:${HOME}/.composer/vendor/fostermadeco/rokanan/dependencies/ansible/roles:/etc/ansible/roles:';

@@ -7,7 +7,7 @@ use Symfony\Component\Process\Process;
 
 class CreateRokananLockFileTask
 {
-    public function runInContext(Command $context)
+    public function __invoke(Command $context)
     {
         $process = new Process('git rev-parse HEAD', $context->root);
         $head = trim($process->mustRun()->getOutput());
