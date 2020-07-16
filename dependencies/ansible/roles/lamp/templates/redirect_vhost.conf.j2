@@ -5,6 +5,8 @@
     ServerAlias {{ aliases|join(' ') }}
   {% endif %}
 
+  Header set Strict-Transport-Security "max-age=7776000"
+
   RewriteEngine On
   RewriteRule (.+) https://%{HTTP_HOST}$1 [R=301]
 </VirtualHost>
