@@ -9,6 +9,18 @@
   apt:
     name: "{{ item }}"
     state: present
+  with_items:
+    - zip
+    - unzip
+    - git
+  tags:
+    - packages
+
+- name: install additional packages
+  become: yes
+  apt:
+    name: "{{ item }}"
+    state: present
   with_items: "{{ packages | default([]) }}"
   tags:
     - packages
