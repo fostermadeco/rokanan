@@ -25,7 +25,7 @@ class BuildHostFilesTask
         $this->buildHostVarsFile();
         $this->buildHostsFile();
 
-        $context->vars += $this->vars;
+        $context->localVars += $this->vars;
     }
 
     protected function buildHostVarsFile()

@@ -25,6 +25,7 @@ class Application extends BaseApplication
             new Command\InitializeProjectCommand(),
             new Command\ConnectCommand(),
             new Command\RunCommand(),
+            new Command\TrustCertificateCommand(),
         ]);
     }
 }

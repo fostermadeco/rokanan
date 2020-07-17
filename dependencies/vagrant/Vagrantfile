@@ -7,32 +7,6 @@ vars = YAML.load_file("#{dir}/ansible/host_vars/vagrant")
 
 Vagrant.configure("2") do |config|
 
-  certpath = vars['certpath'] || '/usr/local/etc'
-  cert = certpath + "/ssl/certs/#{vars['hostname']}.crt"
-  keychain = '/Library/Keychains/System.keychain'
-
-  [:up, :provision, :reload].each do |command|
-    if !File.exist?(certpath)
-      config.trigger.before command do
-        run "sudo mkdir -p #{certpath}"
-        run "sudo chown #{`whoami`} #{certpath}"
-      end
-    end
-
-    config.trigger.after command do
-      system("sudo security verify-cert -c #{cert} > /dev/null 2>&1 || sudo security add-trusted-cert -d -k #{keychain} #{cert}")
-    end
-  end
-
-  [:destroy].each do |command|
-    if File.exist?(cert)
-      config.trigger.after command do
-        system("security find-certificate -ac #{vars['hostname']} -Z #{keychain} | awk -F: '/SHA-1 hash/{ print $2 }' | xargs -I {} sudo security delete-certificate -Z {} #{keychain}")
-        File.delete(cert)
-      end
-    end
-  end
-
   config.vm.box_version = '20180903.0.0'
   config.vm.box_check_update = false
 

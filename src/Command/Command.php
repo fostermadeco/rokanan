@@ -55,7 +55,12 @@ class Command extends BaseCommand
     /**
      * @var array
      */
-    public $vars = [];
+    public $localVars = [];
+
+    /**
+     * @var array
+     */
+    public $groupVars = [];
 
     /**
      * @inheritDoc
@@ -81,8 +86,13 @@ class Command extends BaseCommand
 
         $localVars = $this->cwd.'/ansible/host_vars/vagrant';
         if ($this->filesystem->exists($localVars)) {
-            $vars = Yaml::parseFile($localVars);
-            $this->projectRoot = '/var/www/'.$vars['hostname'];
+            $this->localVars = Yaml::parseFile($localVars);
+            $this->projectRoot = '/var/www/'.$this->localVars['hostname'];
+        }
+
+        $groupVars = $this->cwd.'/ansible/group_vars/all';
+        if ($this->filesystem->exists($groupVars)) {
+            $this->groupVars = Yaml::parseFile($groupVars );
         }
     }
 
