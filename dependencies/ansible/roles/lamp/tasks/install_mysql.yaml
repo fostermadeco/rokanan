@@ -10,6 +10,7 @@
     - python3-mysqldb
 
 - name: ensure mysql is started
+  become: yes
   service:
     name: mysql
     state: started
@@ -18,9 +19,9 @@
 - name: set root user password
   become: yes
   mysql_user:
+    login_unix_socket: /var/run/mysqld/mysqld.sock
     name: root
     password: root
-    check_implicit_admin: true
 
 - name: create root .my.cnf
   become: yes
