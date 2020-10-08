@@ -6,6 +6,12 @@
   tags:
     - php_modules
 
+- name: set package prefix
+  set_fact:
+    package_prefix: "php{{ php_version if php_version != 7.2 else '' }}"
+  tags:
+    - php_modules
+
 - name: add php repo
   become: yes
   apt_repository:
@@ -33,25 +39,25 @@
     - apngopt
     - pngnq
     - pngquant
-    - php7.2-cli
-    - php7.2-fpm
-    - php7.2-json
-    - php7.2-intl
-    - php7.2-curl
-    - php7.2-mysql
-    - php7.2-gd
-    - php7.2-sqlite3
-    - php7.2-imap
-    - php7.2-pgsql
-    - php7.2-ldap
-    - php7.2-opcache
-    - php7.2-soap
-    - php7.2-zip
-    - php7.2-mbstring
-    - php7.2-bcmath
-    - php7.2-xmlrpc
-    - php7.2-xsl
-    - php7.2-bz2
+    - "{{ package_prefix }}-cli"
+    - "{{ package_prefix }}-fpm"
+    - "{{ package_prefix }}-json"
+    - "{{ package_prefix }}-intl"
+    - "{{ package_prefix }}-curl"
+    - "{{ package_prefix }}-mysql"
+    - "{{ package_prefix }}-gd"
+    - "{{ package_prefix }}-sqlite3"
+    - "{{ package_prefix }}-imap"
+    - "{{ package_prefix }}-pgsql"
+    - "{{ package_prefix }}-ldap"
+    - "{{ package_prefix }}-opcache"
+    - "{{ package_prefix }}-soap"
+    - "{{ package_prefix }}-zip"
+    - "{{ package_prefix }}-mbstring"
+    - "{{ package_prefix }}-bcmath"
+    - "{{ package_prefix }}-xmlrpc"
+    - "{{ package_prefix }}-xsl"
+    - "{{ package_prefix }}-bz2"
     - php-pear
     - php-apcu
     - php-igbinary
@@ -67,7 +73,7 @@
 - name: install additional php modules
   become: yes
   apt:
-    name: "php{{ php_version if php_version != 7.2 else '' }}-{{ item }}"
+    name: "{{ package_prefix }}-{{ item }}"
     state: present
   with_items: "{{ php_modules | default([]) }}"
   tags:
