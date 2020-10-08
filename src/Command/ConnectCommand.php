@@ -4,7 +4,6 @@ namespace FosterMade\Rokanan\Command;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Process\Process;
 
 class ConnectCommand extends Command
 {
@@ -23,8 +22,7 @@ class ConnectCommand extends Command
                 <<<EOS
 The <info>connect</info> command will open a terminal session inside the
 provisioned VM. It is essentially a wrapper around `vagrant ssh` to retain
-control over environment variables (like VAGRANT_USE_VAGRANT_TRIGGERS) and
-run any pre/post tasks.
+control over environment variables and run any pre/post tasks.
 
 <info>rokanan connect</info>
 
@@ -40,8 +38,9 @@ EOS
     {
         parent::execute($input, $output);
 
-        $process = $this->createVagrantProcess('vagrant ssh');
+        $process = $this->createProcess(['vagrant', 'ssh']);
         $process->run();
+
         exit($process->getExitCode());
     }
 }
