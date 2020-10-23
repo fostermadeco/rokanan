@@ -3,3 +3,6 @@ defaults:
   roles_path: dependencies/ansible/roles
   deprecation_warnings: "False"
   inventory: ansible/hosts
+
+ssh_connection:
+  ssh_args: "-o ForwardAgent=yes -o StrictHostKeyChecking=no"

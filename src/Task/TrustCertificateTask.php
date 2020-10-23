@@ -55,5 +55,7 @@ class TrustCertificateTask
 
             $context->output->writeln("<info>The cert for {$hostname} is now trusted.</info>");
         }
+
+        return $process->getExitCode();
     }
 }

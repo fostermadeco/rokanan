@@ -17,33 +17,15 @@ Rokanan is a tool to simplify provisioning standard development environments acr
 
 ## Installation
 
-Install Rokanan globally with Composer by running
-
-```bash
-composer global require fostermadeco/rokanan dev-master
-```
-
-Rokanan requires several Symfony components at version `^4.4`, because this is the current Symfony LTS version.
-
-You may therefore experience some conflicts with installed versions of these components, especially if you have globally installed Laravel Envoy or Homestead. If this is the case, you must also require these components at `^4.4` in your global “project”. You can do this by adding, for example, the following to `~/.composer/composer.json`:
+Install Rokanan into your project with 
 
 ```
-    "require": {
-        [...], 
-        "symfony/console": "^4.4",
-        "symfony/process": "^4.4",
-        "symfony/yaml": "^4.4",
-        [...]
-    }
-```
+composer require --dev fostermadeco/rokanan dev-master --ignore-platform-reqs
+``` 
 
-Thereafter run
+To facilitate invoking the locally installed `rokanan`, prepend `./vendor/bin` to your `PATH`.
 
-```bash
-composer global update symfony/console symfony/process symfony/yaml [. . .]
-```
-
-Be sure to add any components for which Composer complains about locked versions — the above is only for illustration. If you have older versions of Envoy, Homestead or other packages that are incompatible with `^4.4` components, you will likely need to update them to newer versions also. 
+NB: Global installation is no longer supported. 
 
 ### Note on Homebrew
 
@@ -51,11 +33,29 @@ Because [Homebrew/php](https://github.com/Homebrew/homebrew-php) was deprecated 
 
 If you do uninstall it, you may also want to follow the uninstaller’s advice and delete any or all of the non-empty directories that the uninstaller lists upon completion. The _one exception_ is `/usr/local/etc` unless you do not have any self-signed certs stored in `/usr/local/etc/ssl/certs`.
 
+### Note on GNU coreutils
+
+If you have GNU coreutils installed through Homebrew (or otherwise), you may occasionally see the following warning:
+
+```
+stty: standard input: unable to perform all requested operations
+``` 
+
+You can safely ignore it. If it truly bothers you, pick a folder in your `PATH` that has precedence over `/usr/local/opt/coreutils/libexec/gnubin`. In that folder, create a symlink to /bin/stty.
+
 ## Features   
 
-The primary feature while Rokanan is still in beta is that it provides a central location for custom [Ansible roles](https://github.com/fostermadeco/ansible-roles) so we can avoid the confusion and complexity of including them as a Git submodule in projects.
+The primary feature while Rokanan is still in beta is that it provides access to custom [Ansible roles](https://github.com/fostermadeco/ansible-roles) so we can avoid the confusion and complexity of including them as a Git submodule in projects.
 
 There are also a couple of beta-release commands you can run — your feedback on their functionality is welcome and desired!
+
+### `rokanan init`
+
+This will help you initialize a project interactively.
+
+### `rokanan trust-cert`
+
+Run this after `vagrant up` to automatically trust the self-signed cert (only supported on macOS).
 
 ### `rokanan check`
 

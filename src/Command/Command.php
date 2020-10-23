@@ -28,11 +28,6 @@ class Command extends BaseCommand
     public $root;
 
     /**
-     * @var string
-     */
-    public $anonymousRoot;
-
-    /**
      * @var InputInterface
      */
     public $input;
@@ -76,9 +71,7 @@ class Command extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $composerHome = trim((new Process('composer -ng config home'))->mustRun()->getOutput());
-        $this->root = $composerHome.'/vendor/fostermadeco/rokanan';
-        $this->anonymousRoot = str_replace($composerHome, '{{ composer_home }}', $this->root);
+        $this->root = 'vendor/fostermadeco/rokanan';
         $this->cwd = realpath($input->getOption('working-dir'));
 
         $this->input = $input;
