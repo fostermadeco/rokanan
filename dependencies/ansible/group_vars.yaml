@@ -10,5 +10,5 @@
   question: What is the path to the public folder?
   default: public
 
-- name: databases
+- name: mysql_databases
   question: Enter database names as a comma-separated list

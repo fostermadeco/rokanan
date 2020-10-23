@@ -43,7 +43,7 @@ class BuildGroupVarsTask
             $this->vars[$var['name']] = $helper->ask($this->context->input, $this->context->output, $question);
         }
 
-        $this->vars['document_root'] = "/var/www/html/{{ public_folder }}";
+        $this->vars['document_root'] = "/var/www/{{ hostname }}/{{ public_folder }}";
         $this->vars['php_modules'] = [];
 
         $this->context->output->writeln(<<<EOS
