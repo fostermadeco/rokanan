@@ -16,7 +16,7 @@ class TrustCertificateTask
     public function runInContext(Command $context)
     {
         if (!file_exists(self::CERT_DIR) || !is_writable(self::CERT_DIR)) {
-            $process = (new Process(sprintf(self::COMMAND_CREATE_DIR, dirname(dirname(self::CERT_DIR)), self::CERT_DIR)))->mustRun();
+            $process = Process::fromShellCommandline(sprintf(self::COMMAND_CREATE_DIR, dirname(dirname(self::CERT_DIR)), self::CERT_DIR))->mustRun();
             if (!$process->isSuccessful()) {
                 throw new \Exception($process->getErrorOutput());
             }
@@ -26,7 +26,7 @@ class TrustCertificateTask
 
         $path = sprintf('%s/%s.crt', self::CERT_DIR, $hostname);
 
-        $process = new Process(sprintf(self::COMMAND_COPY_CERT, $hostname, self::CERT_DIR));
+        $process = Process::fromShellCommandline(sprintf(self::COMMAND_COPY_CERT, $hostname, self::CERT_DIR));
         $process->run();
 
         if (!$process->isSuccessful()) {
@@ -40,14 +40,14 @@ class TrustCertificateTask
             $context->output->writeln('<info>The cert already exists on the host machine (md5sum match).</info>');
             $context->output->write('<info>Checking if the certificate is trusted . . . </info>');
 
-            $process = new Process(sprintf(self::COMMAND_VERIFY_CERT, $path));
+            $process = Process::fromShellCommandline(sprintf(self::COMMAND_VERIFY_CERT, $path));
             $process->run();
             $out = ($trusted = $process->isSuccessful()) ? '✔' : '✘';
             $context->output->writeln("<info>{$out}</info>");
         }
 
         if (false === $trusted) {
-            $process = (new Process(sprintf(self::COMMAND_TRUST_CERT, $path)))->mustRun();
+            $process = Process::fromShellCommandline(sprintf(self::COMMAND_TRUST_CERT, $path))->mustRun();
 
             if (!$process->isSuccessful()) {
                 throw new \Exception($process->getErrorOutput());

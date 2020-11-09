@@ -30,6 +30,6 @@ class TrustCertificateCommand extends Command
     {
         parent::execute($input, $output);
 
-        (new TrustCertificateTask())->runInContext($this);
+       return (new TrustCertificateTask())->runInContext($this);
     }
 }
