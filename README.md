@@ -1,4 +1,4 @@
-# Rokanan
+# [DEPRECATED] Rokanan
 
 > “Hail Rokanan, my guest. Tell me why you go south.”
 >
